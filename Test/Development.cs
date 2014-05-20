@@ -1,28 +1,54 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using DataProfiler;
 using NUnit.Framework;
-using JunkDrawer;
 
 namespace Test {
+
     [TestFixture]
     public class Development {
+        private const string OUTPUT = "tempProfile.csv";
+
+        [Test]
+        public void TestExporter()
+        {
+            File.WriteAllText(@"temp.txt", @"t1,t2,t3,t4
+Monday,10,1.1,1/1/2014
+Tuesday,11,2.2,2/1/2014
+Wednesday,12,3.3,3/1/2014
+Wednesday,12,3.3,3/1/2014
+Thursday,13,4.4,4/1/2014
+Friday,14,5.5,5/1/2014
+Saturday,15,6.6,6/1/2014");
+
+            File.Delete(OUTPUT);
+            
+            var profile = new Profiler().Profile(@"temp.txt");
+            new ProfileExporter().Export(profile, OUTPUT);
+
+            Assert.IsTrue(File.Exists(OUTPUT));
+            System.Diagnostics.Process.Start(OUTPUT);
+
+        }
+
         [Test]
         public void TestProfiler() {
             File.WriteAllText(@"temp.txt", @"t1,t2,t3,t4
 Monday,10,1.1,1/1/2014
 Tuesday,11,2.2,2/1/2014
 Wednesday,12,3.3,3/1/2014
+Wednesday,12,3.3,3/1/2014
 Thursday,13,4.4,4/1/2014
 Friday,14,5.5,5/1/2014
 Saturday,15,6.6,6/1/2014");
 
             var result = new FileImporter().Import(@"temp.txt");
-            Assert.AreEqual(',', result.FileInformation.Delimiter);
+            Assert.AreEqual(",", result.Properties["delimiter"]);
             Assert.AreEqual(4, result.Fields.Count());
-            Assert.AreEqual(6, result.Rows.Count());
+            Assert.AreEqual(7, result.Rows.Count());
 
-            var profile = new DataProfiler.DataProfiler().Profile(result);
+            var profile = new Profiler().Profile(result);
 
             Assert.AreEqual(4, profile.Count());
 
@@ -30,6 +56,11 @@ Saturday,15,6.6,6/1/2014");
             Assert.AreEqual("byte", profile["t2"]["type"]);
             Assert.AreEqual("single", profile["t3"]["type"]);
             Assert.AreEqual("datetime", profile["t4"]["type"]);
+
+            Assert.AreEqual(1, profile["t1"]["index"]);
+            Assert.AreEqual(2, profile["t2"]["index"]);
+            Assert.AreEqual(3, profile["t3"]["index"]);
+            Assert.AreEqual(4, profile["t4"]["index"]);
 
             Assert.AreEqual("Friday", profile["t1"]["min"]);
             Assert.AreEqual(10, profile["t2"]["min"]);
@@ -50,6 +81,11 @@ Saturday,15,6.6,6/1/2014");
             Assert.AreEqual(2, profile["t2"]["maxlength"]);
             Assert.AreEqual(3, profile["t3"]["maxlength"]);
             Assert.AreEqual(20, profile["t4"]["maxlength"]);
+
+            Assert.AreEqual(6, profile["t1"]["count"]);
+            Assert.AreEqual(6, profile["t2"]["count"]);
+            Assert.AreEqual(6, profile["t3"]["count"]);
+            Assert.AreEqual(6, profile["t4"]["count"]);
 
         }
 

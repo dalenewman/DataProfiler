@@ -1,16 +1,28 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using JunkDrawer;
+using System.Text.RegularExpressions;
 using Transformalize.Configuration.Builders;
 using Transformalize.Libs.Rhino.Etl;
 using Transformalize.Main;
 
 namespace DataProfiler {
-    public class DataProfiler {
+
+    public class Profiler {
+
+        public Dictionary<string, Row> Profile(string input) {
+            var result = IsValidFileName(input) && new FileInfo(input).Exists ? new FileImporter().Import(input) : new TableImporter().Import(input);
+            return Profile(result);
+        }
 
         public Dictionary<string, Row> Profile(Result result) {
 
-            var profile = result.Fields.ToDictionary(field => field.Name, field => new Row() { { "type", field.Type } });
+            var i = 0;
+            var profile = result.Fields.ToDictionary(field => field.Name, field => new Row() {
+                { "field", field.Name },
+                { "type", field.Type},
+                { "index", ++i}
+            });
 
             var aggregates = new Dictionary<string, bool> {
                 {"min", false},
@@ -28,13 +40,13 @@ namespace DataProfiler {
         }
 
         private static Row GetBuilder(Result result, string aggregate, bool distinct) {
-            var builder = new ProcessBuilder(result.FileInformation.ProcessName)
-                .Star(result.FileInformation.ProcessName)
+            var builder = new ProcessBuilder(aggregate)
+                .Star(aggregate)
                 .Connection("input")
                     .Provider("internal")
                 .Connection("output")
                     .Provider("internal")
-                .Entity("profile")
+                .Entity(aggregate)
                     .DetectChanges(false)
                     .InputOperation(new RowsOperation(result.Rows))
                     .Group()
@@ -53,7 +65,7 @@ namespace DataProfiler {
                     .Distinct(distinct);
             }
 
-            return ProcessFactory.Create(builder.Process())[0].Run()["profile"].First();
+            return ProcessFactory.Create(builder.Process())[0].Run()[aggregate].First();
         }
 
         private static void AddToProfile(ref Dictionary<string, Row> profile, Result result, string aggregate, bool distinct) {
@@ -61,6 +73,14 @@ namespace DataProfiler {
             foreach (var column in minRow.Columns.Where(c => !c.Equals("group"))) {
                 profile[column][aggregate] = minRow[column];
             }
+        }
+
+        private bool IsValidFileName(string name) {
+            var containsABadCharacter = new Regex("[" + Regex.Escape(string.Concat(Path.GetInvalidPathChars(), Path.GetInvalidFileNameChars())) + "]");
+            if (containsABadCharacter.IsMatch(name)) {
+                return false;
+            };
+            return true;
         }
     }
 }
