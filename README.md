@@ -4,14 +4,15 @@ A .NET based library and command line tool for data profiling.  Use it to profil
 
 Released under GNU General Public License, version 3 (GPL-3.0).
 
-Usage: dp input (output)
+<code>dp input (output)</code>
 
 Input is either a file name, or a fully qualified database table or view name (e.g. Server.Database.Schema.Table).
 Output is an optional file name.  If *.html, some HTML markup and style is added.  Otherwise, it's a delimited file.
 
-dp c:\temp\data.txt c:\temp\data-profile.html
-dp localhost.Junk.dbo.Table
-dp [127.0.0.1].Junk.dbo.Table table-profile.csv
+* <code>dp c:\temp\data.txt c:\temp\data-profile.html</code>
+* <code>dp localhost.Junk.dbo.Table</code>
+* <code>dp [127.0.0.1].Junk.dbo.Table table-profile.csv</code>
+
 
 The command line only takes 2 arguments: input, and output.
 
