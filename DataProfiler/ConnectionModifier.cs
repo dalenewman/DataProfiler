@@ -1,5 +1,6 @@
 using System;
 using System.Text.RegularExpressions;
+using Transformalize.Libs.NLog;
 using Transformalize.Main.Providers;
 
 namespace DataProfiler {
@@ -11,6 +12,7 @@ namespace DataProfiler {
         private string _schema = string.Empty;
         private string _name = string.Empty;
         private AbstractConnection _connection;
+        private readonly Logger _logger = LogManager.GetLogger("Connection.Modifier");
 
         public string[] NameElements { get; set; }
 
@@ -59,6 +61,7 @@ namespace DataProfiler {
                     default:
                         throw new DataProfilerException("Can't parse {0}.  Expecting 3 to 4 elements delimited by dots (e.g. Server.Database.Schema.Table or Database.Schema.Table).", FullyQualifiedName);
                 }
+                _logger.Info("Connection modified, Server:{0}, Database:{1}, Schema:{2}, Name:{3}.", connection.Server, connection.Database, Schema, Name);
             } else {
                 switch (NameElements.Length) {
                     case 3:
@@ -73,6 +76,7 @@ namespace DataProfiler {
                     default:
                         throw new DataProfilerException("Can't parse {0}.  Expecting 2 to 3 elements delimited by dots (e.g. Server.Database.Table or Database.Table).", FullyQualifiedName);
                 }
+                _logger.Info("Connection modified, Server:{0}, Database:{1}, Name:{2}.", connection.Server, connection.Database, Name);
             }
         }
 

@@ -1,13 +1,16 @@
 ﻿using System.Globalization;
+using System.IO;
 
 namespace DataProfiler {
     public class FileImporter {
 
-        public Result Import(string file) {
+        public Result Import(string file, decimal sample = 100m) {
 
-            var temp = new JunkDrawer.FileImporter().Import(file);
+            var temp = new JunkDrawer.FileImporter().Import(file, sample);
 
-            var result = new Result();
+            var result = new Result {
+                Name = temp.FileInformation.FileInfo.Name.Replace(temp.FileInformation.FileInfo.Extension, string.Empty)
+            };
             foreach (var field in temp.Fields) {
                 result.Fields.Add(new Field(field.Name, field.Type, field.Length));
             }

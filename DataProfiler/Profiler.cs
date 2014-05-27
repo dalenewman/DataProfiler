@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -10,8 +11,10 @@ namespace DataProfiler {
 
     public class Profiler {
 
-        public Dictionary<string, Row> Profile(string input) {
-            var result = IsValidFileName(input) && new FileInfo(input).Exists ? new FileImporter().Import(input) : new TableImporter().Import(input);
+        public Dictionary<string, Row> Profile(string input, decimal sample = 100m) {
+            var result = IsValidFileName(input) && new FileInfo(input).Exists ?
+                new FileImporter().Import(input, sample) :
+                new TableImporter().Import(input, sample);
             return Profile(result);
         }
 
@@ -39,8 +42,10 @@ namespace DataProfiler {
             return profile;
         }
 
-        private static Row GetBuilder(Result result, string aggregate, bool distinct) {
-            var builder = new ProcessBuilder(aggregate)
+        private static Row GetBuilder(Result result, string aggregate, bool distinct)
+        {
+            var processName = "Dp" + result.Name[0].ToString(CultureInfo.InvariantCulture).ToUpper() + result.Name.Substring(1);
+            var builder = new ProcessBuilder(processName)
                 .Star(aggregate)
                 .Connection("input")
                     .Provider("internal")
