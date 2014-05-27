@@ -1,21 +1,17 @@
 DataProfiler
 ============
-A .NET based library and command line tool for data profiling.  Use it to profile Excel, delimited text files, and database tables or views.
+A .NET based command line tool (and library) for profiling delimited files, Excel (the 1st sheet), and database tables.
 
 Released under GNU General Public License, version 3 (GPL-3.0).
 
-<code>dp input (output)</code>
+The command line tool is dp.exe.  It takes 1 to 3 arguments:
 
-Input is either a file name, or a fully qualified database table or view name (e.g. Server.Database.Schema.Table).
-Output is an optional file name.  If *.html, some HTML markup and style is added.  Otherwise, it's a delimited file.
+1. **Input**: A file name or fully qualified database table name.  The fully qualified name must indicate the Server, the Database, the Schema, and the Table's name delimited by dots.  For example, `Server.Database.Schema.Table` is correct.
+  *when your server name contains dots, you should surround it with brackets (just like in T-SQL).
+  *if your provider doesn't support schemas, just use `Server.Database.Table`.
+2. **Output** (optional): An optional file name.  By default, the file is comma delimited.  So, you may choose a .txt or .csv extension and it will open in NotePad or Excel respectively.  However, if you use an .html extension, the output is is an HTML table with Bootstrap styling.
+3. **Sample Percentage** (optional): If you don't need a perfect data profile, use an integer between 1 and 99 to sample a percentage of the data.  This can really speed things up.
 
-* <code>dp c:\temp\data.txt c:\temp\data-profile.html</code>
-* <code>dp localhost.Junk.dbo.Table</code>
-* <code>dp [127.0.0.1].Junk.dbo.Table table-profile.csv</code>
-
-
-The command line only takes 2 arguments: input, and output.
-
-By default, database objects are assumed to by SqlServer.  You may configure dp to expect MySql, or PostgreSql as well.  MySql doesn't support schemas, so qualify the table without them (e.g. Server.Database.Table).  You can configure ports, usernames, and passwords as needed.
+By default, database objects are assume a provider of SqlServer.  You may configure dp to expect MySql, or PostgreSql as well.  You may configure ports, usernames, and passwords as needed.  This is done in dp.exe.config.
 
 
