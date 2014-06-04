@@ -55,7 +55,7 @@ namespace DataProfiler {
             var abstractConnection = ProcessFactory.Create(builder.Process())[0].Connections["input"];
             var entitySchema = abstractConnection.GetEntitySchema(modifier.Name, modifier.Schema);
             if (entitySchema != null) {
-                foreach (var field in entitySchema.Fields) {
+                foreach (Transformalize.Main.Field field in entitySchema.Fields) {
                     builder
                         .Field(field.Name)
                         .Length(field.Length)
@@ -67,7 +67,7 @@ namespace DataProfiler {
             var result = new Result {
                 Name = modifier.Name,
                 Fields = fields,
-                Rows = ProcessFactory.Create(builder.Process())[0].Run()[modifier.Name],
+                Rows = ProcessFactory.Create(builder.Process())[0].Execute()[modifier.Name],
                 Provider = input.Type.ToString()
             };
             result.Properties["server"] = input.Server;

@@ -81,7 +81,7 @@ namespace DataProfiler {
                 .Field("maxlength").Label("Max Length").Int64();
 
             var process = ProcessFactory.Create(builder.Process())[0];
-            process.Run();
+            process.ExecuteScaler();
         }
     }
 }
