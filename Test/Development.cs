@@ -43,7 +43,7 @@ Thursday,13,4.4,4/1/2014
 Friday,14,5.5,5/1/2014
 Saturday,15,6.6,6/1/2014");
 
-            var result = new FileImporter().Import(@"temp.txt");
+            var result = new FileImporterWrapper().Import(@"temp.txt");
             Assert.AreEqual(",", result.Properties["delimiter"]);
             Assert.AreEqual(4, result.Fields.Count());
             Assert.AreEqual(7, result.Rows.Count());

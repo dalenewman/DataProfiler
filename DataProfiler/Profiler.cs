@@ -13,7 +13,7 @@ namespace DataProfiler {
 
         public Dictionary<string, Row> Profile(string input, decimal sample = 100m) {
             var result = IsValidFileName(input) && new FileInfo(input).Exists ?
-                new FileImporter().Import(input, sample) :
+                new FileImporterWrapper().Import(input, sample) :
                 new TableImporter().Import(input, sample);
             return Profile(result);
         }
