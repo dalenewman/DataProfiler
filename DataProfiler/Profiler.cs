@@ -70,7 +70,7 @@ namespace DataProfiler {
                     .Distinct(distinct);
             }
 
-            return ProcessFactory.Create(builder.Process())[0].Execute()[aggregate].First();
+            return ProcessFactory.CreateSingle(builder.Process()).Execute()[aggregate].First();
         }
 
         private static void AddToProfile(ref Dictionary<string, Row> profile, Result result, string aggregate, bool distinct) {

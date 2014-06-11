@@ -28,6 +28,7 @@ namespace DataProfiler {
                 throw new DataProfilerException("You must define a DataProfiler process with an 'output' connection in the transformalize configuration section.");
             }
 
+            // user may override output provider by changing file extension (e.g. .html, .csv, .txt)
             if (file != null) {
                 var key = new FileInfo(file).Extension.Replace(".", string.Empty).ToLower();
                 provider = _autoProvider.ContainsKey(key) ? _autoProvider[key] : _autoProvider["*"];

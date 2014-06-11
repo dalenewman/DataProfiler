@@ -11,7 +11,6 @@ namespace DataProfiler {
         private string _fullyQualifiedName;
         private string _schema = string.Empty;
         private string _name = string.Empty;
-        private AbstractConnection _connection;
         private readonly Logger _logger = LogManager.GetLogger("Connection.Modifier");
 
         public string[] NameElements { get; set; }
@@ -44,7 +43,7 @@ namespace DataProfiler {
         }
 
         public void Modify(ref AbstractConnection connection) {
-            _connection = connection;
+
             if (connection.Schemas) {
                 switch (NameElements.Length) {
                     case 4:
@@ -83,8 +82,8 @@ namespace DataProfiler {
         private string Clean(string element) {
             return element
                 .Replace('*', '.')
-                .TrimStart(_connection.L.ToCharArray())
-                .TrimEnd(_connection.R.ToCharArray());
+                .TrimStart("[".ToCharArray())
+                .TrimEnd("]".ToCharArray());
         }
 
     }

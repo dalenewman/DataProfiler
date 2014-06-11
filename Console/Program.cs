@@ -28,7 +28,14 @@ namespace Console {
             }
 
             if (args.Count > 1) {
-                _output = args[1];
+                int sample;
+                if (int.TryParse(args[1], out sample)) {
+                    if (sample > 0 && sample <= 100) {
+                        _sample = sample;
+                    }
+                } else {
+                    _output = args[1];
+                }
             }
 
             if (args.Count > 2) {
@@ -38,7 +45,7 @@ namespace Console {
                         _sample = sample;
                     }
                 } else {
-                    System.Console.WriteLine("Error parson 3rd argument.");
+                    System.Console.WriteLine("Error parsing sample percentage.");
                     PrintUsage();
                     Environment.Exit(1);
                 }
@@ -50,9 +57,9 @@ namespace Console {
 
         private static void PrintUsage() {
             System.Console.WriteLine("You must supply 1 to 3 valid arguments.");
-            System.Console.WriteLine("1: input file or fully qualified table");
-            System.Console.WriteLine("2: output file.");
-            System.Console.WriteLine("3: sample percentage. A value between 1 and 100 (defaults to 100 percent).");
+            System.Console.WriteLine("1: An input file or fully qualified table");
+            System.Console.WriteLine("2: An output file or a sample percentage between 1 and 100.");
+            System.Console.WriteLine("3: A sample percentage. A value between 1 and 100 (defaults to 100 percent).");
         }
     }
 }
