@@ -47,6 +47,7 @@ namespace DataProfiler {
             var processName = "Dp" + result.Name[0].ToString(CultureInfo.InvariantCulture).ToUpper() + result.Name.Substring(1);
             var builder = new ProcessBuilder(processName)
                 .Star(aggregate)
+                .StarEnabled(false)
                 .Connection("input")
                     .Provider("internal")
                 .Connection("output")
@@ -70,7 +71,7 @@ namespace DataProfiler {
                     .Distinct(distinct);
             }
 
-            return ProcessFactory.CreateSingle(builder.Process()).Execute()[aggregate].First();
+            return ProcessFactory.CreateSingle(builder.Process()).ExecuteSingle().First();
         }
 
         private static void AddToProfile(ref Dictionary<string, Row> profile, Result result, string aggregate, bool distinct) {
@@ -80,7 +81,7 @@ namespace DataProfiler {
             }
         }
 
-        private bool IsValidFileName(string name) {
+        private static bool IsValidFileName(string name) {
             var containsABadCharacter = new Regex("[" + Regex.Escape(string.Concat(Path.GetInvalidPathChars(), Path.GetInvalidFileNameChars())) + "]");
             if (containsABadCharacter.IsMatch(name)) {
                 return false;

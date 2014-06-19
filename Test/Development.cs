@@ -13,7 +13,8 @@ namespace Test {
         [Test]
         public void TestExporter()
         {
-            File.WriteAllText(@"temp.txt", @"t1,t2,t3,t4
+            var file = Path.GetTempFileName();
+            File.WriteAllText(file, @"t1,t2,t3,t4
 Monday,10,1.1,1/1/2014
 Tuesday,11,2.2,2/1/2014
 Wednesday,12,3.3,3/1/2014
@@ -24,12 +25,10 @@ Saturday,15,6.6,6/1/2014");
 
             File.Delete(OUTPUT);
             
-            var profile = new Profiler().Profile(@"temp.txt");
+            var profile = new Profiler().Profile(file);
             new ProfileExporter().Export(profile, OUTPUT);
 
             Assert.IsTrue(File.Exists(OUTPUT));
-            System.Diagnostics.Process.Start(OUTPUT);
-
         }
 
         [Test]
