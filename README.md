@@ -12,7 +12,7 @@ The command line tool is `dp.exe`.  It takes 1 to 3 arguments:
 ####Argument 1, Input:
 Input should be a file name or fully qualified database table name.
 
-_file:_
+*file:*
 ```bash
 dp c:\temp\fantasy\fantasy2013.txt
 ```
@@ -47,18 +47,14 @@ dp c:\temp\fantasy\fantasy2013.txt
 			<tr><td>PosRank</td><td>byte</td><td>23</td><td>222</td><td>1</td><td>223</td><td>1</td><td>3</td></tr>
 			<tr><td>OvRank</td><td>byte</td><td>24</td><td>79</td><td>0</td><td>78</td><td>1</td><td>2</td></tr>
       </tbody>
-	</table>
+</table>
 
-
-
-
-_table:_
+*table:*
 ```bash
 dp localhost.NorthWind.dbo.Customers
 ```
 
-
- <table class="table table-striped table-condensed table-hover">
+<table class="table table-striped table-condensed table-hover">
 	<thead>
         <th>Field</th><th>Type</th><th>Index</th><th>Distinct Count</th><th>Min Value</th><th>Max Value</th><th>Min Length</th><th>Max Length</th>
 	</thead>
