@@ -97,36 +97,36 @@ Sample Percentage is optional.  If you don't need a perfect data profile, use an
 ####dp.exe.config
 
 ```xml
-&lt;transformalize&gt;
-	&lt;processes&gt;
-		&lt;!-- JunkDrawer process is for profiling files --&gt;
-		&lt;add name=&quot;JunkDrawer&quot;&gt;
-			&lt;connections&gt;
-				&lt;add name=&quot;input&quot; provider=&quot;file&quot; file=&quot;*&quot;/&gt;
-				&lt;add name=&quot;output&quot; provider=&quot;internal&quot;/&gt;
-			&lt;/connections&gt;
-		&lt;/add&gt;
-		&lt;add name=&quot;DataProfiler&quot;&gt;
-			&lt;connections&gt;
-				&lt;!-- by default, provider is sqlserver --&gt;
-				&lt;add name=&quot;input&quot; /&gt;
+<transformalize>
+	<processes>
+		<!-- JunkDrawer process is for profiling files -->
+		<add name="JunkDrawer">
+			<connections>
+				<add name="input" provider="file" file="*"/>
+				<add name="output" provider="internal"/>
+			</connections>
+		</add>
+		<add name="DataProfiler">
+			<connections>
+				<!-- by default, provider is sqlserver -->
+				<add name="input" />
 
-				&lt;!-- for other database providers --&gt;
-				&lt;!-- &lt;add name=&quot;input&quot; provider=&quot;mysql&quot; port=&quot;*&quot; user=&quot;*&quot; password=&quot;*&quot; /&gt; --&gt;
-				&lt;!-- &lt;add name=&quot;input&quot; provider=&quot;postgresql&quot; port=&quot;*&quot; user=&quot;*&quot; password=&quot;*&quot; /&gt; --&gt;
+				<!-- for other database providers -->
+				<!-- <add name="input" provider="mysql" port="*" user="*" password="*" /> -->
+				<!-- <add name="input" provider="postgresql" port="*" user="*" password="*" /> -->
 
-				&lt;!-- default output is data-profile.html, in the same folder your dp.exe is in --&gt;
-				&lt;add name=&quot;output&quot; provider=&quot;html&quot; file=&quot;data-profile.html&quot; /&gt;
-			&lt;/connections&gt;
-			&lt;actions&gt;
-				&lt;!-- remove this if you don't want data-profile.html to open after profile is complete --&gt;
-				&lt;add action=&quot;open&quot; connection=&quot;output&quot; /&gt;
-			&lt;/actions&gt;
-			&lt;entities&gt;
-				&lt;!-- you can control the default sample size here, and whether or not nolock hint is used --&gt;
-				&lt;add name=&quot;*&quot; sample=&quot;100&quot; no-lock=&quot;true&quot; /&gt;
-			&lt;/entities&gt;
-		&lt;/add&gt;
-	&lt;/processes&gt;
-&lt;/transformalize&gt;
+				<!-- default output is data-profile.html, in the same folder your dp.exe is in -->
+				<add name="output" provider="html" file="data-profile.html" />
+			</connections>
+			<actions>
+				<!-- remove this if you don't want data-profile.html to open after profile is complete -->
+				<add action="open" connection="output" />
+			</actions>
+			<entities>
+				<!-- you can control the default sample size here, and whether or not nolock hint is used -->
+				<add name="*" sample="100" no-lock="true" />
+			</entities>
+		</add>
+	</processes>
+</transformalize>
 ```
