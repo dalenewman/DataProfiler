@@ -16,7 +16,7 @@ _file:_
 ```bash
 dp c:\temp\fantasy\fantasy2013.txt
 ```
----
+
 <table class="table table-striped table-condensed table-hover">
 		<thead>
             <th>Field</th><th>Type</th><th>Index</th><th>Distinct Count</th><th>Min Value</th><th>Max Value</th><th>Min Length</th><th>Max Length</th>
@@ -49,12 +49,14 @@ dp c:\temp\fantasy\fantasy2013.txt
       </tbody>
 	</table>
 
-_table:_
+---
 
+_table:_
 ```bash
 dp localhost.NorthWind.dbo.Customers
 ```
----
+
+
  <table class="table table-striped table-condensed table-hover">
 	<thead>
         <th>Field</th><th>Type</th><th>Index</th><th>Distinct Count</th><th>Min Value</th><th>Max Value</th><th>Min Length</th><th>Max Length</th>
