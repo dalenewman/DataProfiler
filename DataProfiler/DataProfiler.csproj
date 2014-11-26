@@ -70,10 +70,6 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="JunkDrawer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Assemblies\JunkDrawer.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -88,8 +84,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Field.cs" />
-    <Compile Include="FileImporter.cs" />
+    <Compile Include="FileImporterWrapper.cs" />
+    <Compile Include="IImporter.cs" />
     <Compile Include="Result.cs" />
     <Compile Include="Profiler.cs" />
     <Compile Include="DataProfilerException.cs" />

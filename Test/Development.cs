@@ -1,18 +1,24 @@
 ﻿using System;
+using System.Diagnostics.Tracing;
 using System.IO;
 using System.Linq;
 using DataProfiler;
 using NUnit.Framework;
+using Transformalize.Libs.SemanticLogging;
+using Transformalize.Logging;
 
 namespace Test {
 
     [TestFixture]
     public class Development {
-        private const string OUTPUT = "tempProfile.csv";
+        private const string OUTPUT = @"c:\Temp\Data\tempProfile.csv";
 
         [Test]
-        public void TestExporter()
-        {
+        public void TestExporter() {
+            var listener = new ObservableEventListener();
+            listener.EnableEvents(TflEventSource.Log, EventLevel.Verbose);
+            var subscription = listener.LogToConsole(new LegacyLogFormatter());
+
             var file = Path.GetTempFileName();
             File.WriteAllText(file, @"t1,t2,t3,t4
 Monday,10,1.1,1/1/2014
@@ -24,16 +30,20 @@ Friday,14,5.5,5/1/2014
 Saturday,15,6.6,6/1/2014");
 
             File.Delete(OUTPUT);
-            
+
             var profile = new Profiler().Profile(file);
             new ProfileExporter().Export(profile, OUTPUT);
+
+            subscription.Dispose();
+            listener.DisableEvents(TflEventSource.Log);
+            listener.Dispose();
 
             Assert.IsTrue(File.Exists(OUTPUT));
         }
 
         [Test]
         public void TestProfiler() {
-            File.WriteAllText(@"temp.txt", @"t1,t2,t3,t4
+            File.WriteAllText(@"c:\Temp\Data\temp.txt", @"t1,t2,t3,t4
 Monday,10,1.1,1/1/2014
 Tuesday,11,2.2,2/1/2014
 Wednesday,12,3.3,3/1/2014
@@ -42,7 +52,7 @@ Thursday,13,4.4,4/1/2014
 Friday,14,5.5,5/1/2014
 Saturday,15,6.6,6/1/2014");
 
-            var result = new FileImporterWrapper().Import(@"temp.txt");
+            var result = new FileImporterWrapper().Import(@"c:\Temp\Data\temp.txt");
             Assert.AreEqual(",", result.Properties["delimiter"]);
             Assert.AreEqual(4, result.Fields.Count());
             Assert.AreEqual(7, result.Rows.Count());
@@ -86,6 +96,41 @@ Saturday,15,6.6,6/1/2014");
             Assert.AreEqual(6, profile["t3"]["count"]);
             Assert.AreEqual(6, profile["t4"]["count"]);
 
+        }
+
+        [Test]
+        [Ignore("Depends on NorthWind database on local SQL Server.")]
+        public void TestProfilerDatabase() {
+
+            var listener = new ObservableEventListener();
+            listener.EnableEvents(TflEventSource.Log, EventLevel.Verbose);
+            var subscription = listener.LogToConsole(new LegacyLogFormatter());
+
+            var result = new Profiler().Profile("localhost.NorthWind.dbo.Customers");
+
+            subscription.Dispose();
+            listener.DisableEvents(TflEventSource.Log);
+            listener.Dispose();
+
+            Assert.NotNull(result);
+        }
+
+        [Test]
+        //[Ignore("Depends on NorthWind database on local SQL Server.")]
+        public void TestProfileAndExportDatabaseTable() {
+
+            var listener = new ObservableEventListener();
+            listener.EnableEvents(TflEventSource.Log, EventLevel.Verbose);
+            var subscription = listener.LogToConsole(new LegacyLogFormatter());
+
+            var result = new Profiler().Profile("localhost.NorthWind.dbo.Customers");
+            new ProfileExporter().Export(result);
+
+            subscription.Dispose();
+            listener.DisableEvents(TflEventSource.Log);
+            listener.Dispose();
+
+            Assert.NotNull(result);
         }
 
     }

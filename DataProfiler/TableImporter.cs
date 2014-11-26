@@ -1,35 +1,42 @@
-using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Transformalize.Configuration.Builders;
-using Transformalize.Libs.NLog;
+using Transformalize.Libs.DBDiff.Schema.SqlServer2005.Model;
+using Transformalize.Libs.Lucene.Net.Store;
+using Transformalize.Libs.Nest.Domain.Similarity;
+using Transformalize.Logging;
 using Transformalize.Main;
 using Transformalize.Main.Providers;
 
 namespace DataProfiler {
-
-    public class TableImporter {
-
-        private readonly Logger _logger = LogManager.GetLogger("DataProfiler.TableImporter");
+    public class TableImporter : IImporter {
 
         public Result Import(string resource, decimal sample = 100m) {
 
             AbstractConnection input;
             bool noLock;
 
+            ConnectionModifier modifier;
+
             try {
-                var userDefined = ProcessFactory.Create("DataProfiler")[0];
+                var userDefined = ProcessFactory.CreateSingle("DataProfiler", new Options() { Mode = "metadata"});
                 input = userDefined.Connections["input"];
-                sample = sample > 0m && sample < 100m ? sample : userDefined.Entities[0].Sample;
-                noLock = userDefined.Entities[0].NoLock;
-                _logger.Info("Sample: {0:###} percent, NoLock: {1}", sample, noLock);
+                modifier = new ConnectionModifier(resource);
+                modifier.Modify(ref input);
+
+                var hasEntity = userDefined.Entities.Any();
+
+                sample = sample > 0m && sample < 100m ?
+                    sample :
+                    hasEntity ? userDefined.Entities[0].Sample : 100m;
+
+                noLock = !hasEntity || userDefined.Entities[0].NoLock;
+                TflLogger.Info(userDefined.Name, modifier.Name, "Sample: {0:###} percent, NoLock: {1}", sample, noLock);
             } catch {
                 throw new DataProfilerException("You must define a DataProfiler process with an 'input' connection in the transformalize configuration section.");
             }
-
-            var modifier = new ConnectionModifier(resource);
-            modifier.Modify(ref input);
 
             var cleanName = Regex.Replace(modifier.Name, "[^a-zA-Z]", string.Empty);
 
@@ -50,25 +57,12 @@ namespace DataProfiler {
                     .Sample(sample)
                     .Schema(modifier.Schema);
 
-            var fields = new List<Field>();
-
-            var abstractConnection = ProcessFactory.Create(builder.Process())[0].Connections["input"];
-            var entitySchema = abstractConnection.GetEntitySchema(modifier.Name, modifier.Schema);
-            if (entitySchema != null) {
-                foreach (var field in entitySchema.Fields) {
-                    builder
-                        .Field(field.Name)
-                        .Length(field.Length)
-                        .Type(field.SimpleType)
-                        .PrimaryKey(field.FieldType.HasFlag(FieldType.MasterKey) || field.FieldType.HasFlag(FieldType.PrimaryKey));
-                    fields.Add(new Field(field.Name, field.SimpleType, field.Length));
-                }
-            }
+            var process = ProcessFactory.CreateSingle(builder.Process());
 
             var result = new Result {
                 Name = modifier.Name,
-                Fields = fields,
-                Rows = ProcessFactory.CreateSingle(builder.Process()).ExecuteSingle(),
+                Fields = process.Entities[0].Fields,
+                Rows = process.Execute(),
                 Provider = input.Type.ToString()
             };
             result.Properties["server"] = input.Server;

@@ -85,9 +85,6 @@
     <ApplicationIcon>Fasticon-Database-Data-find.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="JunkDrawer">
-      <HintPath>..\Assemblies\JunkDrawer.dll</HintPath>
-    </Reference>
     <Reference Include="Mono.Security">
       <HintPath>..\packages\Npgsql.2.1.3\lib\net45\Mono.Security.dll</HintPath>
     </Reference>

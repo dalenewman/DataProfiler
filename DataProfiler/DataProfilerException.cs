@@ -1,11 +1,10 @@
 using System;
-using Transformalize.Libs.NLog;
+using Transformalize.Logging;
 
 namespace DataProfiler {
     public class DataProfilerException : Exception {
-        private readonly Logger _log = LogManager.GetLogger("DataProfiler");
         public DataProfilerException(string format, params object[] args) {
-            _log.Error(format, args);
+            TflLogger.Error("DataProfiler","", format, args);
         }
     }
 }

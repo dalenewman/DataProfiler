@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using DataProfiler;
+using Transformalize.Libs.SemanticLogging;
+using Transformalize.Logging;
 
 namespace Console {
 
@@ -11,9 +14,18 @@ namespace Console {
         private static decimal _sample = 100m;
 
         static void Main(string[] args) {
+
+            var listener = new ObservableEventListener();
+            listener.EnableEvents(TflEventSource.Log, EventLevel.Informational);
+            var subscription = listener.LogToConsole(new LegacyLogFormatter());
+
             ValidateArguments(args);
 
             new ProfileExporter().Export(new Profiler().Profile(_input, _sample), _output);
+
+            subscription.Dispose();
+            listener.DisableEvents(TflEventSource.Log);
+            listener.Dispose();
         }
 
         private static void ValidateArguments(IList<string> args) {

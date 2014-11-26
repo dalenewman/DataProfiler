@@ -22,7 +22,7 @@ namespace DataProfiler {
             string provider = null;
 
             try {
-                userDefined = ProcessFactory.Create("DataProfiler")[0];
+                userDefined = ProcessFactory.CreateSingle("DataProfiler", new Options() { Mode = "metadata" });
                 output = userDefined.Connections["output"];
             } catch {
                 throw new DataProfilerException("You must define a DataProfiler process with an 'output' connection in the transformalize configuration section.");
@@ -45,8 +45,8 @@ namespace DataProfiler {
                     .ErrorMode(output.ErrorMode)
                     .File(file ?? output.File)
                     .Folder(output.Folder)
-                    .IncludeFooter(output.IncludeFooter)
-                    .IncludeHeader(output.IncludeHeader)
+                    .Footer(output.Footer)
+                    .Header(output.Header)
                     .Password(output.Password)
                     .Port(output.Port)
                     .Provider(provider ?? output.Type.ToString())
@@ -65,6 +65,9 @@ namespace DataProfiler {
                     .From(action.From)
                     .To(action.To)
                     .Url(action.Url)
+                    .Command(action.Command)
+                    .Body(action.Body)
+                    .Cc(action.Cc)
                     .Modes(action.Modes.ToArray());
             }
 
@@ -81,8 +84,7 @@ namespace DataProfiler {
                 .Field("minlength").Label("Min Length").Int64()
                 .Field("maxlength").Label("Max Length").Int64();
 
-            var process = ProcessFactory.Create(builder.Process())[0];
-            process.ExecuteScaler();
+            ProcessFactory.CreateSingle(builder.Process()).ExecuteScaler();
         }
     }
 }

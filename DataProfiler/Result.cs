@@ -1,15 +1,16 @@
 using System.Collections.Generic;
 using Transformalize.Libs.Rhino.Etl;
+using Transformalize.Main;
 
 namespace DataProfiler {
     public class Result {
 
         private string _name = "Results";
-        private List<Field> _fields = new List<Field>();
+        private Fields _fields = new Fields();
         private Dictionary<string, object> _properties = new Dictionary<string, object>();
         private string _provider = string.Empty;
 
-        public List<Field> Fields {
+        public Fields Fields {
             get { return _fields; }
             set { _fields = value; }
         }

@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using Transformalize.Configuration.Builders;
 using Transformalize.Libs.Rhino.Etl;
@@ -12,10 +13,9 @@ namespace DataProfiler {
     public class Profiler {
 
         public Dictionary<string, Row> Profile(string input, decimal sample = 100m) {
-            var result = IsValidFileName(input) && new FileInfo(input).Exists ?
-                new FileImporterWrapper().Import(input, sample) :
-                new TableImporter().Import(input, sample);
-            return Profile(result);
+            var isFile = IsValidFileName(input) && new FileInfo(input).Exists;
+            var importer = isFile ? (IImporter)new FileImporterWrapper() : new TableImporter();
+            return Profile(importer.Import(input, sample));
         }
 
         public Dictionary<string, Row> Profile(Result result) {
@@ -42,8 +42,7 @@ namespace DataProfiler {
             return profile;
         }
 
-        private static Row GetBuilder(Result result, string aggregate, bool distinct)
-        {
+        private static Row GetBuilder(Result result, string aggregate, bool distinct) {
             var processName = "Dp" + result.Name[0].ToString(CultureInfo.InvariantCulture).ToUpper() + result.Name.Substring(1);
             var builder = new ProcessBuilder(processName)
                 .Star(aggregate)
@@ -71,7 +70,7 @@ namespace DataProfiler {
                     .Distinct(distinct);
             }
 
-            return ProcessFactory.CreateSingle(builder.Process()).ExecuteSingle().First();
+            return ProcessFactory.CreateSingle(builder.Process()).Execute().First();
         }
 
         private static void AddToProfile(ref Dictionary<string, Row> profile, Result result, string aggregate, bool distinct) {
