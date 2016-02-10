@@ -9,10 +9,11 @@ The command line tool is `dp.exe`.  It takes 1 to 3 arguments:
 
 ---
 
-####Argument 1, Input:
+#### Argument 1, Input:
 Input should be a file name or fully qualified database table name.
 
 *file:*
+
 ```bash
 dp c:\temp\fantasy\fantasy2013.txt
 ```
@@ -50,6 +51,7 @@ dp c:\temp\fantasy\fantasy2013.txt
 </table>
 
 *table:*
+
 ```bash
 dp localhost.NorthWind.dbo.Customers
 ```
@@ -81,19 +83,19 @@ By default, database objects assume a provider of `sqlserver`.  You may configur
 
 ---
 
-####Argument 2, Output:
+#### Argument 2, Output:
 
 Output is optional.  If you don't provide it, it will be whatever is defined as output in your DataProfiler process (see *dp.exe.config*). It is usually *data-profile.html*. If your output file has an .html extension, it is rendered and opened as an HTML table with Bootstrap styling.  You may also choose a .txt or .csv extension and it will open in NotePad or Excel respectively.
 
 ---
 
-####Argument 3, Sample Percentage:
+#### Argument 3, Sample Percentage:
 
 Sample Percentage is optional.  If you don't need a perfect data profile, use an integer between 1 and 99 to sample a percentage of the data.  This can really speed things up on bigger files (at the cost of accuracy though).
 
 ---
 
-####dp.exe.config
+#### dp.exe.config
 
 ```xml
 <transformalize>

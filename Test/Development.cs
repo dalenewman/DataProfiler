@@ -1,23 +1,33 @@
-﻿using System;
-using System.Diagnostics.Tracing;
+﻿#region license
+// DataProfiler
+// Copyright 2013 Dale Newman
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//  
+//      http://www.apache.org/licenses/LICENSE-2.0
+//  
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+#endregion
+using System;
 using System.IO;
 using System.Linq;
 using DataProfiler;
 using NUnit.Framework;
-using Transformalize.Libs.SemanticLogging;
-using Transformalize.Logging;
 
 namespace Test {
 
     [TestFixture]
     public class Development {
-        private const string OUTPUT = @"c:\Temp\Data\tempProfile.csv";
+        private const string Output = @"c:\Temp\Data\tempProfile.csv";
 
         [Test]
         public void TestExporter() {
-            var listener = new ObservableEventListener();
-            listener.EnableEvents(TflEventSource.Log, EventLevel.Verbose);
-            var subscription = listener.LogToConsole(new LegacyLogFormatter());
 
             var file = Path.GetTempFileName();
             File.WriteAllText(file, @"t1,t2,t3,t4
@@ -29,16 +39,12 @@ Thursday,13,4.4,4/1/2014
 Friday,14,5.5,5/1/2014
 Saturday,15,6.6,6/1/2014");
 
-            File.Delete(OUTPUT);
+            File.Delete(Output);
 
             var profile = new Profiler().Profile(file);
-            new ProfileExporter().Export(profile, OUTPUT);
+            new ProfileExporter().Export(profile, Output);
 
-            subscription.Dispose();
-            listener.DisableEvents(TflEventSource.Log);
-            listener.Dispose();
-
-            Assert.IsTrue(File.Exists(OUTPUT));
+            Assert.IsTrue(File.Exists(Output));
         }
 
         [Test]
@@ -52,7 +58,7 @@ Thursday,13,4.4,4/1/2014
 Friday,14,5.5,5/1/2014
 Saturday,15,6.6,6/1/2014");
 
-            var result = new FileImporterWrapper().Import(@"c:\Temp\Data\temp.txt");
+            var result = new FileImporter().Import(@"c:\Temp\Data\temp.txt");
             Assert.AreEqual(",", result.Properties["delimiter"]);
             Assert.AreEqual(4, result.Fields.Count());
             Assert.AreEqual(7, result.Rows.Count());
@@ -102,15 +108,7 @@ Saturday,15,6.6,6/1/2014");
         [Ignore("Depends on NorthWind database on local SQL Server.")]
         public void TestProfilerDatabase() {
 
-            var listener = new ObservableEventListener();
-            listener.EnableEvents(TflEventSource.Log, EventLevel.Verbose);
-            var subscription = listener.LogToConsole(new LegacyLogFormatter());
-
             var result = new Profiler().Profile("localhost.NorthWind.dbo.Customers");
-
-            subscription.Dispose();
-            listener.DisableEvents(TflEventSource.Log);
-            listener.Dispose();
 
             Assert.NotNull(result);
         }
@@ -119,16 +117,8 @@ Saturday,15,6.6,6/1/2014");
         //[Ignore("Depends on NorthWind database on local SQL Server.")]
         public void TestProfileAndExportDatabaseTable() {
 
-            var listener = new ObservableEventListener();
-            listener.EnableEvents(TflEventSource.Log, EventLevel.Verbose);
-            var subscription = listener.LogToConsole(new LegacyLogFormatter());
-
             var result = new Profiler().Profile("localhost.NorthWind.dbo.Customers");
             new ProfileExporter().Export(result);
-
-            subscription.Dispose();
-            listener.DisableEvents(TflEventSource.Log);
-            listener.Dispose();
 
             Assert.NotNull(result);
         }
