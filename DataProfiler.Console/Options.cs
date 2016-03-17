@@ -1,20 +1,20 @@
 #region license
-// DataProfiler
+// DataProfiler.Console
 // Copyright 2013 Dale Newman
-// 
+//  
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-//  
-//      http://www.apache.org/licenses/LICENSE-2.0
-//  
+//   
+//       http://www.apache.org/licenses/LICENSE-2.0
+//   
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
 #endregion
-
+using System.Collections.Generic;
 using Cfg.Net.Ext;
 using CommandLine;
 using CommandLine.Text;
@@ -31,7 +31,7 @@ namespace DataProfiler.Console {
         [Option('d', "database", Required = false, DefaultValue = "", HelpText = "The database name.")]
         public string Database { get; set; }
 
-        [Option('o',"schema owner", Required = false, DefaultValue = "", HelpText = "The schema or owner name.")]
+        [Option('o', "schema owner", Required = false, DefaultValue = "", HelpText = "The schema or owner name.")]
         public string Schema { get; set; }
 
         [Option('t', "table", Required = false, DefaultValue = "", HelpText = "The table (or view) name.")]
@@ -49,7 +49,7 @@ namespace DataProfiler.Console {
         [Option('c', "connection type", Required = false, DefaultValue = "sqlserver", HelpText = "The connection type or provider (i.e. sqlserver, mysql, postgresql, sqlite, file, or excel.)")]
         public string Provider { get; set; }
 
-        [Option('n',"port number", DefaultValue = 0, HelpText = "")]
+        [Option('n', "port number", DefaultValue = 0, HelpText = "")]
         public int Port { get; set; }
 
         [Option('l', "limit", DefaultValue = 15, HelpText = "To limit the Min Value and Max Value text returned.")]
@@ -72,7 +72,18 @@ namespace DataProfiler.Console {
                 File = File,
                 Port = Port,
                 User = User,
-                Password = Password
+                Password = Password,
+                Types = new List<TflType> {
+                    new TflType("bool"),
+                    new TflType("byte"),
+                    new TflType("short"),
+                    new TflType("int"),
+                    new TflType("long"),
+                    new TflType("single"),
+                    new TflType("double"),
+                    new TflType("decimal"),
+                    new TflType("datetime")
+                }
             }.WithDefaults();
         }
 

@@ -70,8 +70,8 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CfgNet, Version=0.5.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Cfg-NET.0.5.1\lib\CfgNet.dll</HintPath>
+    <Reference Include="CfgNet, Version=0.6.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Cfg-NET.0.6.5\lib\CfgNet.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Pipeline.Desktop">
