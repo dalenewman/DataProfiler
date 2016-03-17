@@ -85,7 +85,7 @@ dp -fc:\temp\Data\ff\years_2013_fantasy_fantasy.csv > output.csv
 excel output.csv
 ```
 
-![Excel](./images/Excel.png)
+![Excel](https://github.com/dalenewman/DataProfiler/blob/master/Images/Excel.png)
 
 ### Usage with SQL Server Table
 
