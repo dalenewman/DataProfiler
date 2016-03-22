@@ -26,14 +26,20 @@ namespace DataProfiler.Console {
             if (args.Length > 0 && CommandLine.Parser.Default.ParseArguments(args, options)) {
                 var connection = options.ToConnection();
                 using (var scope = new AutofacBootstrapper(connection)) {
-                    var result = scope.Resolve<IImporter>().Import(connection);
-                    var profile = scope.Resolve<IProfiler>().Profile(result, options.Limit);
-                    System.Console.Out.WriteLine("Name,Type,Position,Count,Min Value,Max Value,Min Length,Max Length");
-                    foreach (var field in profile) {
-                        System.Console.Out.WriteLine($"{field.Field.Name},{field.Field.Type},{field.Field.Index-3},{field.Count},\"{field.MinValue}\",\"{field.MaxValue}\",{field.MinLength},{field.MaxLength}");
+                    try {
+                        var result = scope.Resolve<IImporter>().Import(connection);
+                        var profile = scope.Resolve<IProfiler>().Profile(result, options.Limit);
+                        System.Console.Out.WriteLine("Name,Type,Position,Count,Min Value,Max Value,Min Length,Max Length");
+                        foreach (var field in profile) {
+                            System.Console.Out.WriteLine($"{field.Field.Name},{field.Field.Type},{field.Field.Index - 3},{field.Count},\"{field.MinValue}\",\"{field.MaxValue}\",{field.MinLength},{field.MaxLength}");
+                        }
+                        Environment.ExitCode = 0;
+                    } catch (Exception ex) {
+                        System.Console.Error.WriteLine(ex.Message);
+                        Environment.ExitCode = 1;
                     }
                 }
-                Environment.ExitCode = 0;
+                
             } else {
                 System.Console.Error.WriteLine(options.GetUsage());
                 Environment.ExitCode = 1;

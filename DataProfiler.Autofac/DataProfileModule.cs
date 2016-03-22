@@ -54,7 +54,11 @@ namespace DataProfiler.Autofac {
             builder.Register<IRunTimeRun>(ctx => new RunTimeRunner(ctx.ResolveNamed<IContext>(process.Key))).As<IRunTimeRun>();
             builder.Register<IImporter>(ctx => {
                 var key = process.Connections.First(c => c.Name == "input").Key;
-                return new Importer(ctx.ResolveNamed<ISchemaReader>(key), ctx.Resolve<IRunTimeRun>());
+                return new Importer(
+                    ctx.ResolveNamed<ISchemaReader>(key), 
+                    ctx.Resolve<IRunTimeRun>(),
+                    ctx.ResolveNamed<IContext>(process.Key)
+                );
             }).As<IImporter>();
             builder.RegisterType<Profiler>().As<IProfiler>();
         }

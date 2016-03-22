@@ -17,6 +17,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Cfg.Net.Ext;
+using Pipeline;
 using Pipeline.Configuration;
 using Pipeline.Contracts;
 
@@ -25,28 +26,48 @@ namespace DataProfiler {
     public class Importer : IImporter {
         readonly ISchemaReader _reader;
         readonly IRunTimeRun _runner;
+        private readonly IContext _context;
 
-        public Importer(ISchemaReader reader, IRunTimeRun runner) {
+        public Importer(ISchemaReader reader, IRunTimeRun runner, IContext context) {
             _reader = reader;
             _runner = runner;
+            _context = context;
         }
 
         public ImportResult Import(Connection connection) {
 
             var schema = _reader.Read();
 
+            var entity = schema.Entities.First();
+            foreach (var field in entity.Fields.Where(f => Constants.InvalidFieldNames.Contains(f.Name)).Where(field => field.Alias == field.Name)) {
+                field.Alias = field.Name + "Source";
+                _context.Warn($"Reserved column name {field.Name} aliased as {field.Alias}.");
+            }
+
             var cfg = new Process {
                 Name = "Import",
                 Connections = new List<Connection> { connection },
-                Entities = new List<Entity> { schema.Entities.First() }
+                Entities = new List<Entity> { entity }
             }.WithDefaults().Serialize();
 
             var process = new Process();
             process.Load(cfg);
 
+            if (process.Errors().Any()) {
+                foreach (var error in process.Errors()) {
+                    _context.Error(error);
+                }
+                return new ImportResult {
+                    Connection = connection,
+                    Fields = new List<Field>(),
+                    Rows = Enumerable.Empty<IRow>(),
+                    Schema = schema
+                };
+            }
+
             return new ImportResult {
                 Connection = connection,
-                Fields = process.Entities.First().Fields.Where(f=>!f.System).ToList(),
+                Fields = process.Entities.First().Fields.Where(f => !f.System).ToList(),
                 Schema = schema,
                 Rows = _runner.Run(process),
             };
