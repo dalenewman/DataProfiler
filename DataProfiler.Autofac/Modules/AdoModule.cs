@@ -1,6 +1,6 @@
 #region license
-// DataProfiler.Autofac
-// Copyright 2013 Dale Newman
+// Data Profiler
+// Copyright © 2013-2018 Dale Newman
 //  
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,14 +16,14 @@
 #endregion
 using System.Linq;
 using Autofac;
-using Pipeline.Configuration;
-using Pipeline.Contracts;
-using Pipeline.Extensions;
-using Pipeline.Provider.Ado;
-using Pipeline.Provider.MySql;
-using Pipeline.Provider.PostgreSql;
-using Pipeline.Provider.SqlServer;
-using Pipeline.Provider.SQLite;
+using Transformalize.Configuration;
+using Transformalize.Contracts;
+using Transformalize.Extensions;
+using Transformalize.Providers.Ado;
+using Transformalize.Providers.MySql;
+using Transformalize.Providers.PostgreSql;
+using Transformalize.Providers.SqlServer;
+using Transformalize.Providers.SQLite;
 
 namespace DataProfiler.Autofac.Modules {
     public class AdoModule : Module {

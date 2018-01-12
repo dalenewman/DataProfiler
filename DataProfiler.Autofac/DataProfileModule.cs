@@ -1,6 +1,6 @@
 ﻿#region license
-// DataProfiler.Autofac
-// Copyright 2013 Dale Newman
+// Data Profiler
+// Copyright © 2013-2018 Dale Newman
 //  
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,17 +17,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using Autofac;
-using Cfg.Net.Ext;
-using Pipeline.Configuration;
-using Pipeline.Contracts;
-using Pipeline.Ioc.Autofac.Modules;
-using Pipeline.Logging.NLog;
-using AdoModule = DataProfiler.Autofac.Modules.AdoModule;
-using FileSchemaModule = DataProfiler.Autofac.Modules.FileSchemaModule;
+using DataProfiler.Autofac.Modules;
+using Transformalize.Configuration;
+using Transformalize.Contracts;
+using Transformalize.Logging.NLog;
 
 namespace DataProfiler.Autofac {
     public class DataProfileModule : Module {
-        readonly Connection _connection;
+        private readonly Connection _connection;
 
         public DataProfileModule(Connection connection) {
             _connection = connection;
@@ -39,25 +36,25 @@ namespace DataProfiler.Autofac {
                 Name = "Inspection",
                 Mode = "meta",
                 Connections = new List<Connection> { _connection },
-                Entities = new List<Entity> { new Entity { Name = "Schema" }.WithDefaults() }
-            }.WithDefaults().Serialize();
+                Entities = new List<Entity> { new Entity { Name = "Schema" } }
+            }.Serialize();
 
             var process = new Process();
             process.Load(cfg);
 
-            builder.Register(ctx => new NLogPipelineLogger("DataProfiler", LogLevel.Info)).As<IPipelineLogger>().InstancePerLifetimeScope();
+            builder.Register(ctx => new NLogPipelineLogger("DataProfiler")).As<IPipelineLogger>().InstancePerLifetimeScope();
 
             builder.RegisterModule(new ContextModule(process));
             builder.RegisterModule(new AdoModule(process));
             builder.RegisterModule(new FileSchemaModule(process));
 
-            builder.Register<IRunTimeRun>(ctx => new RunTimeRunner(ctx.ResolveNamed<IContext>(process.Key))).As<IRunTimeRun>();
+            builder.Register<IRunTimeRun>(ctx => new RunTimeRunner(ctx.Resolve<IContext>())).As<IRunTimeRun>();
             builder.Register<IImporter>(ctx => {
                 var key = process.Connections.First(c => c.Name == "input").Key;
                 return new Importer(
                     ctx.ResolveNamed<ISchemaReader>(key), 
                     ctx.Resolve<IRunTimeRun>(),
-                    ctx.ResolveNamed<IContext>(process.Key)
+                    ctx.Resolve<IContext>()
                 );
             }).As<IImporter>();
             builder.RegisterType<Profiler>().As<IProfiler>();

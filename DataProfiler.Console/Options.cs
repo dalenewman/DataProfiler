@@ -1,6 +1,6 @@
 #region license
-// DataProfiler.Console
-// Copyright 2013 Dale Newman
+// Data Profiler
+// Copyright © 2013-2018 Dale Newman
 //  
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,10 +15,9 @@
 // limitations under the License.
 #endregion
 using System.Collections.Generic;
-using Cfg.Net.Ext;
 using CommandLine;
 using CommandLine.Text;
-using Pipeline.Configuration;
+using Transformalize.Configuration;
 
 namespace DataProfiler.Console {
 
@@ -84,7 +83,7 @@ namespace DataProfiler.Console {
                     new TflType("decimal"),
                     new TflType("datetime")
                 }
-            }.WithDefaults();
+            };
         }
 
     }

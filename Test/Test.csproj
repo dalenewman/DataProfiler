@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Test</RootNamespace>
     <AssemblyName>Test</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -67,13 +67,11 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CfgNet, Version=0.6.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Cfg-NET.0.6.5\lib\CfgNet.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="CfgNet, Version=0.10.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Cfg-NET.0.10.2\lib\net452\CfgNet.dll</HintPath>
     </Reference>
-    <Reference Include="Excel, Version=2.1.2.3, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
-      <HintPath>..\packages\ExcelDataReader.2.1.2.3\lib\net45\Excel.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="ExcelDataReader, Version=3.1.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.3.1.0\lib\net45\ExcelDataReader.dll</HintPath>
     </Reference>
     <Reference Include="FileHelpers, Version=3.1.5.0, Culture=neutral, PublicKeyToken=3e0c08d59cc3d657, processorArchitecture=MSIL">
       <HintPath>..\packages\FileHelpers.3.1.5\lib\net45\FileHelpers.dll</HintPath>
@@ -87,9 +85,6 @@
       <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Pipeline.Portable">
-      <HintPath>..\packages\Pipeline.Net\Pipeline.Portable.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -97,6 +92,9 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Transformalize, Version=0.2.10.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Transformalize.0.2.10-beta\lib\net452\Transformalize.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Development.cs" />
@@ -104,11 +102,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataProfiler.Autofac\DataProfiler.Autofac.csproj">
-      <Project>{9ecb758f-4c44-4bf6-9b00-f3b9e8fa354d}</Project>
+      <Project>{09936967-9284-4244-954f-2d8c9d531109}</Project>
       <Name>DataProfiler.Autofac</Name>
     </ProjectReference>
     <ProjectReference Include="..\DataProfiler\DataProfiler.csproj">

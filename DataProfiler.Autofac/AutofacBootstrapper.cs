@@ -1,6 +1,6 @@
 ﻿#region license
-// DataProfiler.Autofac
-// Copyright 2013 Dale Newman
+// Data Profiler
+// Copyright © 2013-2018 Dale Newman
 //  
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 // limitations under the License.
 #endregion
 using Autofac;
-using Pipeline.Configuration;
+using Transformalize.Configuration;
 
 namespace DataProfiler.Autofac {
     public class AutofacBootstrapper : IBootstrapper {

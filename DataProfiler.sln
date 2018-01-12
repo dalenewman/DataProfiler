@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2020
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataProfiler", "DataProfiler\DataProfiler.csproj", "{0DB78037-C977-4BC7-9F6A-2F41509BDA03}"
 EndProject
@@ -14,12 +14,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataProfiler.Console", "DataProfiler.Console\DataProfiler.Console.csproj", "{3D7E807C-3D20-4479-9F4E-6EDF1C52C727}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataProfiler.Autofac", "DataProfiler.Autofac\DataProfiler.Autofac.csproj", "{9ECB758F-4C44-4BF6-9B00-F3B9E8FA354D}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{B0D3E71B-E525-4F89-AFB8-85B33AD5CADA}"
 	ProjectSection(SolutionItems) = preProject
 		Images\Excel.png = Images\Excel.png
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataProfiler.Autofac", "DataProfiler.Autofac\DataProfiler.Autofac.csproj", "{09936967-9284-4244-954F-2D8C9D531109}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,23 +67,26 @@ Global
 		{3D7E807C-3D20-4479-9F4E-6EDF1C52C727}.Release|x64.Build.0 = Release|Any CPU
 		{3D7E807C-3D20-4479-9F4E-6EDF1C52C727}.Release|x86.ActiveCfg = Release|Any CPU
 		{3D7E807C-3D20-4479-9F4E-6EDF1C52C727}.Release|x86.Build.0 = Release|Any CPU
-		{9ECB758F-4C44-4BF6-9B00-F3B9E8FA354D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9ECB758F-4C44-4BF6-9B00-F3B9E8FA354D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9ECB758F-4C44-4BF6-9B00-F3B9E8FA354D}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{9ECB758F-4C44-4BF6-9B00-F3B9E8FA354D}.Debug|x64.Build.0 = Debug|Any CPU
-		{9ECB758F-4C44-4BF6-9B00-F3B9E8FA354D}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{9ECB758F-4C44-4BF6-9B00-F3B9E8FA354D}.Debug|x86.Build.0 = Debug|Any CPU
-		{9ECB758F-4C44-4BF6-9B00-F3B9E8FA354D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9ECB758F-4C44-4BF6-9B00-F3B9E8FA354D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9ECB758F-4C44-4BF6-9B00-F3B9E8FA354D}.Release|x64.ActiveCfg = Release|Any CPU
-		{9ECB758F-4C44-4BF6-9B00-F3B9E8FA354D}.Release|x64.Build.0 = Release|Any CPU
-		{9ECB758F-4C44-4BF6-9B00-F3B9E8FA354D}.Release|x86.ActiveCfg = Release|Any CPU
-		{9ECB758F-4C44-4BF6-9B00-F3B9E8FA354D}.Release|x86.Build.0 = Release|Any CPU
+		{09936967-9284-4244-954F-2D8C9D531109}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09936967-9284-4244-954F-2D8C9D531109}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09936967-9284-4244-954F-2D8C9D531109}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{09936967-9284-4244-954F-2D8C9D531109}.Debug|x64.Build.0 = Debug|Any CPU
+		{09936967-9284-4244-954F-2D8C9D531109}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{09936967-9284-4244-954F-2D8C9D531109}.Debug|x86.Build.0 = Debug|Any CPU
+		{09936967-9284-4244-954F-2D8C9D531109}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09936967-9284-4244-954F-2D8C9D531109}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09936967-9284-4244-954F-2D8C9D531109}.Release|x64.ActiveCfg = Release|Any CPU
+		{09936967-9284-4244-954F-2D8C9D531109}.Release|x64.Build.0 = Release|Any CPU
+		{09936967-9284-4244-954F-2D8C9D531109}.Release|x86.ActiveCfg = Release|Any CPU
+		{09936967-9284-4244-954F-2D8C9D531109}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B0D3E71B-E525-4F89-AFB8-85B33AD5CADA} = {9C3424D7-2019-4FDB-8FBE-301D65383F4E}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D3BF4896-8DD4-4C97-B534-447B4B2F2B2B}
 	EndGlobalSection
 EndGlobal

@@ -1,6 +1,6 @@
 #region license
-// DataProfiler.Autofac
-// Copyright 2013 Dale Newman
+// Data Profiler
+// Copyright © 2013-2018 Dale Newman
 //  
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,13 +15,14 @@
 // limitations under the License.
 #endregion
 using Autofac;
-using Pipeline;
-using Pipeline.Configuration;
-using Pipeline.Contracts;
-using Pipeline.Nulls;
-using Pipeline.Provider.Ado;
-using Pipeline.Provider.Excel;
-using Pipeline.Provider.File;
+using Transformalize.Configuration;
+using Transformalize.Context;
+using Transformalize.Contracts;
+using Transformalize.Nulls;
+using Transformalize.Provider.Internal;
+using Transformalize.Providers.Ado;
+using Transformalize.Providers.Excel;
+using Transformalize.Providers.File;
 
 namespace DataProfiler.Autofac.Modules {
     public class EntityInputModule : EntityModule {
@@ -35,9 +36,9 @@ namespace DataProfiler.Autofac.Modules {
 
                 switch (input.Connection.Provider) {
                     case "internal":
-                        return new DataSetEntityReader(input, rowFactory);
+                        return new InternalReader(input, rowFactory);
                     case "file":
-                        return new DelimitedFileReader(input, rowFactory, new NullRowCondition());
+                        return new DelimitedFileReader(input, rowFactory);
                     case "excel":
                         return new ExcelReader(input, rowFactory);
                     case "mysql":

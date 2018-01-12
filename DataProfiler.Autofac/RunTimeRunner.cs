@@ -1,6 +1,6 @@
 #region license
-// DataProfiler.Autofac
-// Copyright 2013 Dale Newman
+// Data Profiler
+// Copyright © 2013-2018 Dale Newman
 //  
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,9 +17,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Autofac;
-using Pipeline.Configuration;
-using Pipeline.Contracts;
-using Pipeline.Ioc.Autofac.Modules;
+using DataProfiler.Autofac.Modules;
+using Transformalize.Configuration;
+using Transformalize.Contracts;
 
 namespace DataProfiler.Autofac {
     public class RunTimeRunner : IRunTimeRun {
@@ -52,13 +52,11 @@ namespace DataProfiler.Autofac {
             container.RegisterInstance(_context.Logger).As<IPipelineLogger>().SingleInstance();
             container.RegisterModule(new ContextModule(process));
             container.RegisterModule(new AdoModule(process));
-            container.RegisterModule(new DataProfiler.Autofac.Modules.EntityControlModule(process));
-            container.RegisterModule(new DataProfiler.Autofac.Modules.EntityInputModule(process));
-            container.RegisterModule(new DataProfiler.Autofac.Modules.EntityOutputModule(process));
-            container.RegisterModule(new DataProfiler.Autofac.Modules.EntityPipelineModule(process));
+            container.RegisterModule(new EntityInputModule(process));
+            container.RegisterModule(new EntityPipelineModule(process));
 
             using (var scope = container.Build().BeginLifetimeScope()) {
-                return scope.ResolveNamed<IPipeline>(process.Entities.First().Key).Run();
+                return scope.ResolveNamed<IPipeline>(process.Entities.First().Key).Read();
             }
         }
     }

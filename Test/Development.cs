@@ -1,6 +1,6 @@
 ﻿#region license
-// Test
-// Copyright 2013 Dale Newman
+// Data Profiler
+// Copyright © 2013-2018 Dale Newman
 //  
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,11 +19,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Cfg.Net.Ext;
 using DataProfiler;
 using DataProfiler.Autofac;
 using NUnit.Framework;
-using Pipeline.Configuration;
+using Transformalize.Configuration;
 
 namespace Test {
 
@@ -46,7 +45,7 @@ Saturday,15,6.6,6/1/2014");
 
             File.Delete(Output);
 
-            var connection = new Connection { Name = "input", Provider = "file", File = file }.WithDefaults();
+            var connection = new Connection { Name = "input", Provider = "file", File = file };
             using (var scope = new AutofacBootstrapper(connection)) {
                 var result = scope.Resolve<IImporter>().Import(connection);
                 var profile = scope.Resolve<IProfiler>().Profile(result, 30);
@@ -77,11 +76,11 @@ Saturday,15,6.6,6/1/2014");
                 Provider = "file",
                 File = @"c:\Temp\Data\temp.txt",
                 Types = new List<TflType> {
-                new TflType("byte"),
-                new TflType("single"),
-                new TflType("datetime")
-            }
-            }.WithDefaults();
+                    new TflType("byte"),
+                    new TflType("single"),
+                    new TflType("datetime")
+                }
+            };
 
             using (var scope = new AutofacBootstrapper(connection)) {
                 var result = scope.Resolve<IImporter>().Import(connection);
@@ -140,10 +139,10 @@ Saturday,15,6.6,6/1/2014");
         }
 
         [Test]
-        //[Ignore("Depends on NorthWind database on local SQL Server.")]
+        // [Ignore("Depends on NorthWind database on local SQL Server.")]
         public void TestProfilerDatabase() {
 
-            var connection = new Connection { Name = "input", Provider = "sqlserver", Database="Northwind", Table = "Customers"}.WithDefaults();
+            var connection = new Connection { Name = "input", Provider = "sqlserver", Database="Northwind", Table = "Customers"};
             using (var scope = new AutofacBootstrapper(connection)) {
                 var result = scope.Resolve<IImporter>().Import(connection);
                 var profile = scope.Resolve<IProfiler>().Profile(result, 30);

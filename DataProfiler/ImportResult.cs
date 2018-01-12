@@ -1,6 +1,6 @@
 #region license
-// DataProfiler
-// Copyright 2013 Dale Newman
+// Data Profiler
+// Copyright © 2013-2018 Dale Newman
 //  
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,10 +14,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 #endregion
-using Pipeline;
-using Pipeline.Configuration;
 using System.Collections.Generic;
-using Pipeline.Contracts;
+using Transformalize.Configuration;
+using Transformalize.Contracts;
 
 namespace DataProfiler {
     public class ImportResult {

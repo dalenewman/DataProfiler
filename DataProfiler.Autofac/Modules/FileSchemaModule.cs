@@ -1,6 +1,6 @@
 #region license
-// DataProfiler.Autofac
-// Copyright 2013 Dale Newman
+// Data Profiler
+// Copyright © 2013-2018 Dale Newman
 //  
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,13 +18,13 @@ using System;
 using System.IO;
 using System.Linq;
 using Autofac;
-using Pipeline.Configuration;
-using Pipeline.Contracts;
-using Pipeline.Desktop;
-using Pipeline.Extensions;
-using Pipeline.Nulls;
-using Pipeline.Provider.Excel;
-using Pipeline.Provider.File;
+using Transformalize;
+using Transformalize.Configuration;
+using Transformalize.Contracts;
+using Transformalize.Extensions;
+using Transformalize.Nulls;
+using Transformalize.Providers.Excel;
+using Transformalize.Providers.File;
 
 namespace DataProfiler.Autofac.Modules {
     public class FileSchemaModule : Module {
@@ -40,24 +40,30 @@ namespace DataProfiler.Autofac.Modules {
                     /* file and excel are different, have to load the content and check it to determine schema */
                     var fileInfo = new FileInfo(Path.IsPathRooted(connection.File) ? connection.File : Path.Combine(AppDomain.CurrentDomain.BaseDirectory, connection.File));
                     var context = ctx.ResolveNamed<IConnectionContext>(connection.Key);
-                    var cfg = connection.Provider == "file" ? new FileInspection(context, fileInfo, 100).Create() : new ExcelInspection(context, fileInfo, 100).Create();
 
-                    var process = new Process(new NullValidator("js"), new NullValidator("sh"));
-                    process.Load(cfg);
+                    if (fileInfo.Exists) {
 
-                    foreach (var warning in process.Warnings()) {
-                        context.Warn(warning);
-                    }
+                        var cfg = connection.Provider == "file" ? new FileInspection(context, fileInfo, 100).Create() : new ExcelInspection(context, fileInfo, 100).Create();
 
-                    if (process.Errors().Any()) {
-                        foreach (var error in process.Errors()) {
-                            context.Error(error);
+                        var process = new Process();
+                        process.Load(cfg);
+
+                        foreach (var warning in process.Warnings()) {
+                            context.Warn(warning);
                         }
-                        return new NullSchemaReader();
+
+                        if (process.Errors().Any()) {
+                            foreach (var error in process.Errors()) {
+                                context.Error(error);
+                            }
+                            return new NullSchemaReader();
+                        }
+
+                        return new SchemaReader(context, new RunTimeRunner(context), process);
                     }
 
-                    return new SchemaReader(context, new RunTimeRunner(context), process);
-
+                    context.Error($"The file {fileInfo.FullName} does not exist.");
+                    return new NullSchemaReader();
                 }).Named<ISchemaReader>(connection.Key);
             }
         }

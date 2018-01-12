@@ -13,8 +13,8 @@ It is released under Apache 2.
 ```bash
 dp
 
-Data Profiler Console 0.0.2.0
-Copyright 2013 Dale Newman
+Data Profiler 0.1.0.0
+Copyright 2013-2018 Dale Newman
 
   -s, --server             (Default: localhost) The server's name or ip address.
 
@@ -81,11 +81,12 @@ Fantasy Ov Rk,string,27,79,"","9",0,2
 ### Usage with File Piped to CSV and use Excel
 
 ```bash
-dp -fc:\temp\Data\ff\years_2013_fantasy_fantasy.csv > output.csv
-excel output.csv
+dp -fc:\temp\Data\ff\years_2013_fantasy_fantasy.csv > output.csv && excel output.csv
 ```
 
-![Excel](https://github.com/dalenewman/DataProfiler/blob/master/Images/Excel.png)
+![Excel](https://raw.githubusercontent.com/dalenewman/DataProfiler/master/Images/Excel.png)
+
+**Note**: For this to work you have to have Excel.exe on your path.  You can use `start output.csv` to use your registered `.csv` editor.
 
 ### Usage with SQL Server Table
 

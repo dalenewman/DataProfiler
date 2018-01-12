@@ -1,6 +1,6 @@
 #region license
-// DataProfiler
-// Copyright 2013 Dale Newman
+// Data Profiler
+// Copyright © 2013-2018 Dale Newman
 //  
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,16 +16,17 @@
 #endregion
 using System.Collections.Generic;
 using System.Linq;
-using Cfg.Net.Ext;
-using Pipeline;
-using Pipeline.Configuration;
-using Pipeline.Contracts;
+using Transformalize;
+using Transformalize.Configuration;
+using Transformalize.Contracts;
+using Transformalize.Nulls;
 
 namespace DataProfiler {
 
     public class Importer : IImporter {
-        readonly ISchemaReader _reader;
-        readonly IRunTimeRun _runner;
+
+        private readonly ISchemaReader _reader;
+        private readonly IRunTimeRun _runner;
         private readonly IContext _context;
 
         public Importer(ISchemaReader reader, IRunTimeRun runner, IContext context) {
@@ -35,6 +36,16 @@ namespace DataProfiler {
         }
 
         public ImportResult Import(Connection connection) {
+
+            if (_reader is NullSchemaReader) {
+                _context.Error($"Unable to read schema of {connection}.");
+                return new ImportResult {
+                    Connection = connection,
+                    Fields = new List<Field>(),
+                    Rows = Enumerable.Empty<IRow>(),
+                    Schema = null
+                };
+            }
 
             var schema = _reader.Read();
 
@@ -46,9 +57,9 @@ namespace DataProfiler {
 
             var cfg = new Process {
                 Name = "Import",
-                Connections = new List<Connection> { connection },
+                Connections = new List<Connection> { schema.Connection },
                 Entities = new List<Entity> { entity }
-            }.WithDefaults().Serialize();
+            }.Serialize();
 
             var process = new Process();
             process.Load(cfg);
@@ -58,7 +69,7 @@ namespace DataProfiler {
                     _context.Error(error);
                 }
                 return new ImportResult {
-                    Connection = connection,
+                    Connection = schema.Connection,
                     Fields = new List<Field>(),
                     Rows = Enumerable.Empty<IRow>(),
                     Schema = schema
@@ -66,7 +77,7 @@ namespace DataProfiler {
             }
 
             return new ImportResult {
-                Connection = connection,
+                Connection = schema.Connection,
                 Fields = process.Entities.First().Fields.Where(f => !f.System).ToList(),
                 Schema = schema,
                 Rows = _runner.Run(process),

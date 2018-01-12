@@ -1,6 +1,6 @@
 ﻿#region license
-// DataProfiler.Autofac
-// Copyright 2013 Dale Newman
+// Data Profiler
+// Copyright © 2013-2018 Dale Newman
 //  
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,11 +16,13 @@
 #endregion
 using System.Collections.Generic;
 using Autofac;
-using Pipeline;
-using Pipeline.Contracts;
-using Process = Pipeline.Configuration.Process;
+using Transformalize.Configuration;
+using Transformalize.Context;
+using Transformalize.Contracts;
+using Transformalize.Impl;
 
 namespace DataProfiler.Autofac.Modules {
+
     public class ProcessControlModule : Module {
         private readonly Process _process;
 
@@ -48,14 +50,14 @@ namespace DataProfiler.Autofac.Modules {
                 }
 
                 // process-level pipeline
-                pipelines.Add(ctx.ResolveNamed<IPipeline>(_process.Key));
+                pipelines.Add(ctx.ResolveNamed<IPipeline>(_process.Name));
 
                 var context = new PipelineContext(ctx.Resolve<IPipelineLogger>(), _process);
 
                 var controller = new ProcessController(pipelines, context);
 
                 return controller;
-            }).Named<IProcessController>(_process.Key);
+            }).Named<IProcessController>(_process.Name);
         }
 
 
