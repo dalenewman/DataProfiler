@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "dp.cli": {
+      "commandName": "Project",
+      "commandLineArgs": "-c file -f SacramentoCrimeJanuary2006.csv"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}
