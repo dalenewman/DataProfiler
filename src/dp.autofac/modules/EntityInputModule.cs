@@ -26,32 +26,32 @@ using Transformalize.Providers.Internal;
 using Transformalize.Providers.CsvHelper;
 
 namespace dp.autofac.modules {
-    public class EntityInputModule : EntityModule {
+   public class EntityInputModule : EntityModule {
 
-        public EntityInputModule(Process process) : base(process) { }
+      public EntityInputModule(Process process) : base(process) { }
 
-        public override void LoadEntity(ContainerBuilder builder, Process process, Entity entity) {
-            builder.Register<IRead>(ctx => {
-                var input = ctx.ResolveNamed<InputContext>(entity.Key);
-                var rowFactory = ctx.ResolveNamed<IRowFactory>(entity.Key, new NamedParameter("capacity", input.RowCapacity));
+      public override void LoadEntity(ContainerBuilder builder, Process process, Entity entity) {
+         builder.Register<IRead>(ctx => {
+            var input = ctx.ResolveNamed<InputContext>(entity.Key);
+            var rowFactory = ctx.ResolveNamed<IRowFactory>(entity.Key, new NamedParameter("capacity", input.RowCapacity));
 
-                switch (input.Connection.Provider) {
-                    case "internal":
-                        return new InternalReader(input, rowFactory);
-                    case "file":
-                        return new CsvHelperReader(input, rowFactory);
-                    case "excel":
-                        return new ExcelReader(input, rowFactory);
-                    case "mysql":
-                    case "postgresql":
-                    case "sqlite":
-                    case "sqlserver":
-                        return new AdoInputReader(input, input.InputFields, ctx.ResolveNamed<IConnectionFactory>(input.Connection.Key), rowFactory);
-                    default:
-                        return new NullReader(input);
-                }
-            }).Named<IRead>(entity.Key);
+            switch (input.Connection.Provider) {
+               case "internal":
+                  return new InternalReader(input, rowFactory);
+               case "file":
+                  return new CsvHelperReader(input, rowFactory);
+               case "excel":
+                  return new ExcelReader(input, rowFactory);
+               case "mysql":
+               case "postgresql":
+               case "sqlite":
+               case "sqlserver":
+                  return new AdoInputReader(input, input.InputFields, ctx.ResolveNamed<IConnectionFactory>(input.Connection.Key), rowFactory);
+               default:
+                  return new NullReader(input);
+            }
+         }).Named<IRead>(entity.Key);
 
-        }
-    }
+      }
+   }
 }

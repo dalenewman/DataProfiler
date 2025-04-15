@@ -18,6 +18,6 @@ using System.Collections.Generic;
 
 namespace dp {
     public interface IProfiler : IResolvable {
-        IEnumerable<FieldProfile> Profile(ImportResult importResult, int displayLimit);
+        IList<FieldProfile> Profile(ImportResult importResult, int displayLimit);
     }
 }

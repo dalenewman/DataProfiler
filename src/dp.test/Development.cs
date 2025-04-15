@@ -89,7 +89,7 @@ Saturday,15,6.6,6/1/2014");
 
          using (var scope = new AutofacBootstrapper(connection)) {
             var result = scope.Resolve<IImporter>().Import(connection);
-            var profile = scope.Resolve<IProfiler>().Profile(result, 30).ToList();
+            var profile = scope.Resolve<IProfiler>().Profile(result, 30);
 
             Assert.AreEqual(",", result.Connection.Delimiter);
             Assert.AreEqual(4, result.Fields.Count);
@@ -144,7 +144,7 @@ Saturday,15,6.6,6/1/2014");
       }
 
       [TestMethod]
-      [Ignore("Depends on NorthWind database on local SQL Server.")]
+      // [Ignore("Depends on NorthWind database on local SQL Server.")]
       public void TestProfilerDatabase() {
 
          var connection = new Connection { 
@@ -153,7 +153,7 @@ Saturday,15,6.6,6/1/2014");
             Database = "Northwind", 
             Table = "Customers",
             User = "sa",
-            Password = "REDACTED"
+            Password = "DevDev1!"
          };
          using (var scope = new AutofacBootstrapper(connection)) {
             var result = scope.Resolve<IImporter>().Import(connection);

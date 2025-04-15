@@ -23,41 +23,45 @@ using Transformalize.Contracts;
 using Transformalize.Logging.NLog;
 
 namespace dp.autofac {
-    public class DataProfileModule : Module {
-        private readonly Connection _connection;
+   public class DataProfileModule : Module {
+      private readonly Connection _connection;
 
-        public DataProfileModule(Connection connection) {
-            _connection = connection;
-        }
+      public DataProfileModule(Connection connection) {
+         _connection = connection;
+      }
 
-        protected override void Load(ContainerBuilder builder) {
+      protected override void Load(ContainerBuilder builder) {
 
-            var cfg = new Process {
-                Name = "Inspection",
-                Mode = "meta",
-                Connections = new List<Connection> { _connection },
-                Entities = new List<Entity> { new Entity { Name = "Schema" } }
-            }.Serialize();
+         var cfg = new Process {
+            Name = "Inspection",
+            Mode = "meta",
+            Connections = new List<Connection> { _connection },
+            Entities = new List<Entity> { new Entity { Name = "Schema" } }
+         }.Serialize();
 
-            var process = new Process();
-            process.Load(cfg);
+         var process = new Process();
+         process.Load(cfg);
 
-            builder.Register(ctx => new NLogPipelineLogger("DataProfiler")).As<IPipelineLogger>().InstancePerLifetimeScope();
+         builder.Register(ctx => new NLogPipelineLogger("DataProfiler")).As<IPipelineLogger>().InstancePerLifetimeScope();
 
-            builder.RegisterModule(new ContextModule(process));
-            builder.RegisterModule(new AdoModule(process));
-            builder.RegisterModule(new FileSchemaModule(process));
+         builder.RegisterModule(new ContextModule(process));
+         builder.RegisterModule(new AdoModule(process));
+         builder.RegisterModule(new FileSchemaModule(process));
 
-            builder.Register<IRunTimeRun>(ctx => new RunTimeRunner(ctx.Resolve<IContext>())).As<IRunTimeRun>();
-            builder.Register<IImporter>(ctx => {
-                var key = process.Connections.First(c => c.Name == "input").Key;
-                return new Importer(
-                    ctx.ResolveNamed<ISchemaReader>(key), 
-                    ctx.Resolve<IRunTimeRun>(),
-                    ctx.Resolve<IContext>()
-                );
-            }).As<IImporter>();
-            builder.RegisterType<Profiler>().As<IProfiler>();
-        }
-    }
+         builder.Register<IRunTimeRun>(ctx => new RunTimeRunner(ctx.Resolve<IContext>())).As<IRunTimeRun>();
+         builder.Register<IImporter>(ctx => {
+            var key = process.Connections.First(c => c.Name == "input").Key;
+            return new Importer(
+                ctx.ResolveNamed<ISchemaReader>(key),
+                ctx.Resolve<IRunTimeRun>(),
+                ctx.Resolve<IContext>()
+            );
+         }).As<IImporter>();
+         if(_connection.Arguments == "InMemory") {
+            builder.RegisterType<InMemoryProfiler>().As<IProfiler>();
+         } else {
+            builder.RegisterType<LessMemoryProfiler>().As<IProfiler>();
+         }
+      }
+   }
 }

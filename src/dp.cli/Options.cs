@@ -15,6 +15,7 @@
 // limitations under the License.
 #endregion
 using CommandLine;
+using CommandLine.Text;
 using Transformalize.Configuration;
 
 namespace dp.cli {
@@ -23,7 +24,7 @@ namespace dp.cli {
    [Verb("profile", isDefault: true, HelpText = "Run Data Profiler")]
    public class Options {
 
-      [Option('c', "connection type", Required = true, Default = "", HelpText = "The connection type or provider (i.e. sqlserver, mysql, postgresql, sqlite, file, or excel.)")]
+      [Option('c', "connection-type", Required = true, Default = "", HelpText = "The connection type or provider (i.e. sqlserver, mysql, postgresql, sqlite, file, or excel.)")]
       public string Provider { get; set; }
 
       [Option('s', "server", Required = false, Default = "", HelpText = "The server's name or ip address.")]
@@ -47,14 +48,18 @@ namespace dp.cli {
       [Option('f', "file", Required = false, Default = "", HelpText = "The file.")]
       public string File { get; set; }
 
-      [Option('n', "port number", Default = 0, HelpText = "")]
+      [Option('n', "port-number", Default = 0, HelpText = "")]
       public int Port { get; set; }
 
       [Option('l', "limit", Default = 15, HelpText = "To limit the Min Value and Max Value text returned.")]
       public int Limit { get; set; }
 
+      [Option('m', "in-memory", Default = true, HelpText = "Load everything into memory and profile, else try reducing memory footprint.")]
+      public bool InMemory { get; set; }
+
       public Connection ToConnection() {
          return new Connection {
+            Arguments = InMemory ? "InMemory" : "LessMemory",
             Name = "input",
             Key = "input",
             Provider = File == string.Empty ? Provider : "file",

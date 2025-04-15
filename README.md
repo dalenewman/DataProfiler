@@ -14,17 +14,19 @@ It is released under Apache 2.
 Data Profiler 0.2.0
 Copyright 2013-2025 Dale Newman
 
-  -c, --connection type    Required. (Default: ) The connection type or provider (i.e. sqlserver, mysql, postgresql, sqlite, file, or excel.)
+  -c, --connection-type    Required. (Default: ) The connection type or provider (i.e. sqlserver, mysql, postgresql, sqlite, file, or excel.)
   -s, --server             (Default: ) The server's name or ip address.
   -d, --database           (Default: ) The database name.
-  -o, --schema owner       (Default: ) The schema name.
+  -o, --schema             (Default: ) The schema name.
   -t, --table              (Default: ) The table (or view) name.
   -u, --user               (Default: ) The user name.
   -p, --password           (Default: ) The password.
   -f, --file               (Default: ) The file.
-  -n, --port number        (Default: 0)
+  -n, --port-number        (Default: 0)
   -l, --limit              (Default: 15) To limit the Min Value and Max Value text returned.
+  -m, --in-memory          (Default: true) Load everything into memory and profile, else try reducing memory footprint.
   --help                   Display this help screen.
+  --version                Display version information.
 ```
 
 #### Usage with File
