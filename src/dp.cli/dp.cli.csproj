@@ -7,6 +7,8 @@
       <Nullable>enable</Nullable>
       <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
       <DockerfileContext>..\..</DockerfileContext>
+      <DockerfileTag>dataprofiler.cli</DockerfileTag>
+      <DockerfileFile>Dockerfile</DockerfileFile>
       <Version>0.2.0</Version>
       <FileVersion>0.2.0</FileVersion>
       <AssemblyVersion>0.2.0</AssemblyVersion>

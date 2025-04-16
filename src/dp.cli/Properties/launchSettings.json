@@ -5,7 +5,8 @@
       "commandLineArgs": "-c file -f SacramentoCrimeJanuary2006.csv"
     },
     "Container (Dockerfile)": {
-      "commandName": "Docker"
+      "commandName": "Docker",
+      "commandLineArgs": "-c file -f SacramentoCrimeJanuary2006.csv"
     }
   }
 }

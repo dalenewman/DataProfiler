@@ -14,6 +14,8 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["nuget.config", "."]
 COPY ["src/dp.cli/dp.cli.csproj", "src/dp.cli/"]
+COPY ["src/dp.autofac/dp.autofac.csproj", "src/dp.autofac/"]
+COPY ["src/dp/dp.csproj", "src/dp/"]
 RUN dotnet restore "./src/dp.cli/dp.cli.csproj"
 COPY . .
 WORKDIR "/src/src/dp.cli"
