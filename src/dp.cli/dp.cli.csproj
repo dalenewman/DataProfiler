@@ -9,9 +9,9 @@
       <DockerfileContext>..\..</DockerfileContext>
       <DockerfileTag>dataprofiler.cli</DockerfileTag>
       <DockerfileFile>Dockerfile</DockerfileFile>
-      <Version>0.2.0</Version>
-      <FileVersion>0.2.0</FileVersion>
-      <AssemblyVersion>0.2.0</AssemblyVersion>
+      <Version>0.2.1-beta</Version>
+      <FileVersion>0.2.1</FileVersion>
+      <AssemblyVersion>0.2.1</AssemblyVersion>
       <Copyright>Copyright © 2013-2025 Dale Newman</Copyright>
    </PropertyGroup>
 
@@ -25,9 +25,6 @@
    </ItemGroup>
 
    <ItemGroup>
-      <None Update="NLog.config">
-         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
       <None Update="SacramentoCrimeJanuary2006.csv">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>

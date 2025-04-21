@@ -20,6 +20,7 @@ using Transformalize.Configuration;
 using Transformalize.Context;
 using Transformalize.Contracts;
 using Transformalize.Impl;
+using Transformalize.Logging;
 
 namespace dp.autofac.modules {
 
@@ -52,7 +53,7 @@ namespace dp.autofac.modules {
                 // process-level pipeline
                 pipelines.Add(ctx.ResolveNamed<IPipeline>(_process.Name));
 
-                var context = new PipelineContext(ctx.Resolve<IPipelineLogger>(), _process);
+                var context = new PipelineContext(ctx.Resolve<MemoryLogger>(), _process);
 
                 var controller = new ProcessController(pipelines, context);
 

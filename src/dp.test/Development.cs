@@ -14,7 +14,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 #endregion
-using System.Text;
 using dp;
 using dp.autofac;
 using Transformalize.Configuration;
@@ -52,12 +51,7 @@ Saturday,15,6.6,6/1/2014");
          using (var scope = new AutofacBootstrapper(connection)) {
             var result = scope.Resolve<IImporter>().Import(connection);
             var profile = scope.Resolve<IProfiler>().Profile(result, 30);
-            var builder = new StringBuilder();
-            builder.AppendLine("Name,Type,Position,Count,Min Value,Max Value,Min Length,Max Length");
-            foreach (var field in profile) {
-               builder.AppendLine($"{field.Field.Name},{field.Field.Type},{field.Field.Index},{field.Count},\"{field.MinValue}\",\"{field.MaxValue}\",{field.MinLength},{field.MaxLength}");
-            }
-            File.WriteAllText(Output, builder.ToString());
+            scope.Resolve<IWriter>().Write(profile, new StreamWriter(Output));
          }
 
          Assert.IsTrue(File.Exists(Output));
@@ -145,7 +139,7 @@ Saturday,15,6.6,6/1/2014");
 
       [TestMethod]
       // [Ignore("Depends on NorthWind database on local SQL Server.")]
-      public void TestProfilerDatabase() {
+      public void TestProfilerSqlServer() {
 
          var connection = new Connection { 
             Name = "input", 
@@ -155,11 +149,67 @@ Saturday,15,6.6,6/1/2014");
             User = "sa",
             Password = "DevDev1!"
          };
+
+         using (var scope = new AutofacBootstrapper(connection)) {
+            var result = scope.Resolve<IImporter>().Import(connection);
+            var profile = scope.Resolve<IProfiler>().Profile(result, 30);
+            
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(profile);
+            Assert.AreEqual(12, profile.Count);
+
+            scope.Resolve<IWriter>().Write(profile, Console.Out);
+         }
+      }
+
+      [TestMethod]
+      public void TestProfilerPostgreSql() {
+
+         var connection = new Connection {
+            Name = "input",
+            Provider = "postgresql",
+            Database = "northwind",
+            Table = "Customers",
+            User = "postgres",
+            Password = "DevDev1!"
+         };
          using (var scope = new AutofacBootstrapper(connection)) {
             var result = scope.Resolve<IImporter>().Import(connection);
             var profile = scope.Resolve<IProfiler>().Profile(result, 30);
             Assert.IsNotNull(result);
             Assert.IsNotNull(profile);
+            Assert.AreEqual(11, profile.Count);
+
+            scope.Resolve<IWriter>().Write(profile, Console.Out);
+         }
+      }
+
+      [TestMethod]
+      public void TestTrouble() {
+
+         var connection = new Connection {
+            Name = "input",
+            Provider = "postgresql",
+            Database = "orchard",
+            Schema = "public",
+            Table = "ContentItemIndex",
+            User = "orchard",
+            Password = "********"
+         };
+         using (var scope = new AutofacBootstrapper(connection)) {
+            var logger = scope.GetLogger();
+            var result = scope.Resolve<IImporter>().Import(connection);
+            var profile = scope.Resolve<IProfiler>().Profile(result, 30);
+
+            foreach (var entry in logger.Log.OrderBy(e=>e.Sequence)) {
+               Console.WriteLine($"{entry.Level}: {entry.Message}");
+            }
+
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(profile);
+            Assert.AreEqual(13, profile.Count);
+
+            scope.Resolve<IWriter>().Write(profile, Console.Out);
          }
       }
 

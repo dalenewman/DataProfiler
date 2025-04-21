@@ -20,10 +20,10 @@ using Autofac;
 using Transformalize.Configuration;
 using Transformalize.Context;
 using Transformalize.Contracts;
+using Transformalize.Logging;
 using Transformalize.Nulls;
 using Transformalize.Providers.File.Transforms;
 using Transformalize.Transforms;
-using Transformalize.Transforms.System;
 
 namespace dp.autofac {
     public static class TransformFactory {
@@ -32,7 +32,7 @@ namespace dp.autofac {
             var transforms = new List<ITransform>();
             foreach (var f in fields.Where(f => f.Transforms.Any())) {
                 var field = f;
-                transforms.AddRange(field.Transforms.Select(t => SwitchTransform(ctx, new PipelineContext(ctx.Resolve<IPipelineLogger>(), process, entity, field, t))));
+                transforms.AddRange(field.Transforms.Select(t => SwitchTransform(ctx, new PipelineContext(ctx.Resolve<MemoryLogger>(), process, entity, field, t))));
             }
             return transforms;
         }

@@ -2,7 +2,7 @@
 
 # docker buildx create --driver=docker-container --name=container
 
-version="0.2.0"
+version="0.2.1"
 build="mcr.microsoft.com/dotnet/sdk:8.0"
 base="mcr.microsoft.com/dotnet/runtime:8.0"
 name="dataprofiler.cli"

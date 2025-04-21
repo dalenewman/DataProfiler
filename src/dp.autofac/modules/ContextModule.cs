@@ -19,6 +19,7 @@ using Transformalize.Configuration;
 using Transformalize.Context;
 using Transformalize.Contracts;
 using Transformalize.Impl;
+using Transformalize.Logging;
 using Transformalize.Providers.Console;
 
 namespace dp.autofac.modules {
@@ -39,7 +40,7 @@ namespace dp.autofac.modules {
                 return;
 
             // Process Context
-            builder.Register<IContext>((ctx, p) => new PipelineContext(ctx.Resolve<IPipelineLogger>(), _process)).As<IContext>();
+            builder.Register<IContext>((ctx, p) => new PipelineContext(ctx.Resolve<MemoryLogger>(), _process)).As<IContext>();
 
             // Process Output Context
             builder.Register(ctx => {
@@ -71,7 +72,7 @@ namespace dp.autofac.modules {
 
             // Entity Context and RowFactory
             foreach (var entity in _process.Entities) {
-                builder.Register<IContext>((ctx, p) => new PipelineContext(ctx.Resolve<IPipelineLogger>(), _process, entity)).Named<IContext>(entity.Key);
+                builder.Register<IContext>((ctx, p) => new PipelineContext(ctx.Resolve<MemoryLogger>(), _process, entity)).Named<IContext>(entity.Key);
 
                 builder.Register(ctx => {
                     var context = ctx.ResolveNamed<IContext>(entity.Key);

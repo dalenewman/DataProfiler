@@ -10,19 +10,13 @@
       For more information, visit https://learn.microsoft.com/dotnet/core/testing/unit-testing-platform-integration-dotnet-test#show-failure-per-test
       -->
     <TestingPlatformShowTestsFailure>true</TestingPlatformShowTestsFailure>
-    <Version>0.2.0</Version>
-    <FileVersion>0.2.0</FileVersion>
-    <AssemblyVersion>0.2.0</AssemblyVersion>
+    <Version>0.2.1-beta</Version>
+    <FileVersion>0.2.1</FileVersion>
+    <AssemblyVersion>0.2.1</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\dp.autofac\dp.autofac.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="NLog.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>

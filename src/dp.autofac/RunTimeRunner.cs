@@ -20,6 +20,7 @@ using Autofac;
 using dp.autofac.modules;
 using Transformalize.Configuration;
 using Transformalize.Contracts;
+using Transformalize.Logging;
 
 namespace dp.autofac {
     public class RunTimeRunner : IRunTimeRun {
@@ -49,7 +50,7 @@ namespace dp.autofac {
             }
 
             var container = new ContainerBuilder();
-            container.RegisterInstance(_context.Logger).As<IPipelineLogger>().SingleInstance();
+            container.RegisterInstance(_context.Logger).As<MemoryLogger>().SingleInstance();
             container.RegisterModule(new ContextModule(process));
             container.RegisterModule(new AdoModule(process));
             container.RegisterModule(new EntityInputModule(process));

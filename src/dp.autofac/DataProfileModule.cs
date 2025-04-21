@@ -20,7 +20,7 @@ using Autofac;
 using dp.autofac.modules;
 using Transformalize.Configuration;
 using Transformalize.Contracts;
-using Transformalize.Logging.NLog;
+using Transformalize.Logging;
 
 namespace dp.autofac {
    public class DataProfileModule : Module {
@@ -42,12 +42,12 @@ namespace dp.autofac {
          var process = new Process();
          process.Load(cfg);
 
-         builder.Register(ctx => new NLogPipelineLogger("DataProfiler")).As<IPipelineLogger>().InstancePerLifetimeScope();
+         builder.Register(ctx => new MemoryLogger(LogLevel.Info)).AsSelf().SingleInstance();
 
          builder.RegisterModule(new ContextModule(process));
          builder.RegisterModule(new AdoModule(process));
          builder.RegisterModule(new FileSchemaModule(process));
-
+         
          builder.Register<IRunTimeRun>(ctx => new RunTimeRunner(ctx.Resolve<IContext>())).As<IRunTimeRun>();
          builder.Register<IImporter>(ctx => {
             var key = process.Connections.First(c => c.Name == "input").Key;
@@ -57,6 +57,9 @@ namespace dp.autofac {
                 ctx.Resolve<IContext>()
             );
          }).As<IImporter>();
+
+         builder.Register<IWriter>(ctx => new Writer());
+
          if(_connection.Arguments == "InMemory") {
             builder.RegisterType<InMemoryProfiler>().As<IProfiler>();
          } else {

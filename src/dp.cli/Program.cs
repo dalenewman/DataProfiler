@@ -15,8 +15,9 @@
 // limitations under the License.
 #endregion
 using CommandLine;
-using dp;
 using dp.autofac;
+using System.Runtime.CompilerServices;
+using Transformalize.Contracts;
 
 namespace dp.cli {
    class Program {
@@ -39,16 +40,25 @@ namespace dp.cli {
 
          var connection = options.ToConnection();
          using (var scope = new AutofacBootstrapper(connection)) {
+            var logger = scope.GetLogger();
             try {
                var result = scope.Resolve<IImporter>().Import(connection);
-               var profile = scope.Resolve<IProfiler>().Profile(result, options.Limit);
-               System.Console.Out.WriteLine("Name,Type,Position,Count,Min Value,Max Value,Min Length,Max Length");
-               foreach (var field in profile) {
-                  System.Console.Out.WriteLine($"{field.Field.Name},{field.Field.Type},{field.Field.Index - 3},{field.Count},\"{field.MinValue}\",\"{field.MaxValue}\",{field.MinLength},{field.MaxLength}");
+               if(result.Schema.Entities.Any() && result.Schema.Entities.First().Fields.Any()) {
+                  var profile = scope.Resolve<IProfiler>().Profile(result, options.Limit);
+                  var writer = scope.Resolve<IWriter>();
+                  writer.Write(profile, Console.Out);
+                  Environment.ExitCode = 0;
+               } else {
+                  foreach (var entry in logger.Log) {
+                     Console.Error.WriteLine(entry.Message);
+                  }
+                  Environment.ExitCode = 1;
                }
-               Environment.ExitCode = 0;
             } catch (Exception ex) {
-               System.Console.Error.WriteLine(ex.Message);
+               Console.Error.WriteLine(ex.Message);
+               foreach (var entry in logger.Log) {
+                  Console.Error.WriteLine(entry.Message);
+               }
                Environment.ExitCode = 1;
             }
          }

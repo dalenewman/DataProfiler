@@ -21,6 +21,7 @@ using Transformalize.Configuration;
 using Transformalize.Context;
 using Transformalize.Contracts;
 using Transformalize.Impl;
+using Transformalize.Logging;
 using Transformalize.Nulls;
 using Transformalize.Transforms.System;
 
@@ -53,16 +54,16 @@ namespace dp.autofac.modules {
 
             // transform
             if (!process.ReadOnly) {
-               pipeline.Register(new SystemFieldsTransform(new PipelineContext(ctx.Resolve<IPipelineLogger>(), process, entity)));
+               pipeline.Register(new SystemFieldsTransform(new PipelineContext(ctx.Resolve<MemoryLogger>(), process, entity)));
             }
 
-            pipeline.Register(new DefaultTransform(new PipelineContext(ctx.Resolve<IPipelineLogger>(), process, entity), context.GetAllEntityFields().Where(f => !f.System)));
+            pipeline.Register(new DefaultTransform(new PipelineContext(ctx.Resolve<MemoryLogger>(), process, entity), context.GetAllEntityFields().Where(f => !f.System)));
             pipeline.Register(TransformFactory.GetTransforms(ctx, context.Process, context.Entity, entity.GetAllFields().Where(f => f.Transforms.Any())));
 
             if (!process.ReadOnly) {
-               pipeline.Register(new StringTruncateTransfom(new PipelineContext(ctx.Resolve<IPipelineLogger>(), process, entity)));
+               pipeline.Register(new StringTruncateTransfom(new PipelineContext(ctx.Resolve<MemoryLogger>(), process, entity)));
                if (provider == "sqlserver") {
-                  pipeline.Register(new MinDateTransform(new PipelineContext(ctx.Resolve<IPipelineLogger>(), process, entity), new DateTime(1753, 1, 1)));
+                  pipeline.Register(new MinDateTransform(new PipelineContext(ctx.Resolve<MemoryLogger>(), process, entity), new DateTime(1753, 1, 1)));
                }
             }
 

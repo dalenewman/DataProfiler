@@ -16,23 +16,28 @@
 #endregion
 using Autofac;
 using Transformalize.Configuration;
+using Transformalize.Logging;
 
 namespace dp.autofac {
-    public class AutofacBootstrapper : IBootstrapper {
-        readonly ILifetimeScope _scope;
+   public class AutofacBootstrapper : IBootstrapper {
+      readonly ILifetimeScope _scope;
 
-        public AutofacBootstrapper(Connection connection) {
-            var builder = new ContainerBuilder();
-            builder.RegisterModule(new DataProfileModule(connection));
-            _scope = builder.Build().BeginLifetimeScope();
-        }
+      public AutofacBootstrapper(Connection connection) {
+         var builder = new ContainerBuilder();
+         builder.RegisterModule(new DataProfileModule(connection));
+         _scope = builder.Build().BeginLifetimeScope();
+      }
 
-        public T Resolve<T>() where T : IResolvable {
-            return _scope.Resolve<T>();
-        }
+      public T Resolve<T>() where T : IResolvable {
+         return _scope.Resolve<T>();
+      }
 
-        public void Dispose() {
-            _scope.Dispose();
-        }
-    }
+      public MemoryLogger GetLogger() {
+         return _scope.Resolve<MemoryLogger>();
+      }
+
+      public void Dispose() {
+         _scope.Dispose();
+      }
+   }
 }
